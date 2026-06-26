@@ -15,7 +15,7 @@
     "dotenv": "^17.2.3",
     "jose": "^5.9.6",
     "js-yaml": "^5.1.0",
-    "lucide-react": "^0.546.0",
+    "lucide-react": "^1.21.0",
     "motion": "^12.23.24",
     "next": "^16.2.9",
     "openid-client": "^5.6.5",
