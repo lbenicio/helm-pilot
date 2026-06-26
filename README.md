@@ -2,6 +2,21 @@
 
 A web-based Helm Chart and Kubernetes Release Manager with OIDC authentication. Built with Next.js 16 App Router.
 
+## Index
+
+- [Features](#features)
+- [Architecture](#architecture)
+- [Directory Structure](#directory-structure)
+- [Quick Start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Docker Compose](#docker-compose)
+- [Configuration](#configuration)
+- [Scripts](#scripts)
+- [Documentation](#documentation)
+- [License](#license)
+
+
 ## Features
 
 - **Multi-Cluster Support** — Switch between configured clusters with latency and health indicators
