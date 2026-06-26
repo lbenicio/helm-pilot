@@ -2,7 +2,7 @@
   "name": "helm-pilot",
   "description": "A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system.",
   "private": true,
-  "version": "0.2.4",
+  "version": "0.2.5",
   "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
