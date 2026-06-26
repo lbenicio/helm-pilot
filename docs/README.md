@@ -18,13 +18,41 @@ Helm Pilot is a web-based Helm Chart and Kubernetes Release Manager with OIDC au
 
 Helm Pilot is built with **Next.js 16 App Router** for the frontend and API layer. It connects to Kubernetes clusters via the REST API using OIDC bearer tokens or service account impersonation. Helm release data is parsed directly from Kubernetes Secrets.
 
-## Quick Links
+---
 
-| Section | Description |
-|---|---|
-| [Getting Started](./getting-started/README.md) | Installation, configuration, and quick start guide |
-| [Architecture](./architecture/README.md) | System design, routing, and API design |
-| [Authentication](./authentication/README.md) | OIDC setup, Pocket ID configuration, RBAC |
-| [Kubernetes](./kubernetes/README.md) | Cluster connection, Helm releases, impersonation |
-| [Deployment](./deployment/README.md) | Docker, Kubernetes deployment, health probes |
-| [Development](./development/README.md) | Local setup, code standards, contributing |
+## Index
+
+### Getting Started
+
+- [Installation](./getting-started/installation.md) — Prerequisites, local install, Docker Compose
+- [Configuration](./getting-started/configuration.md) — Complete environment variables reference
+- [Quick Start](./getting-started/quick-start.md) — 5-minute guide to first deployment
+
+### Architecture
+
+- [Overview](./architecture/overview.md) — System design, component tree, in-memory modules
+- [Routing](./architecture/routing.md) — File-based routes, dynamic params, catch-all patterns
+- [API Design](./architecture/api-design.md) — All API endpoints, JWT sessions, error handling
+
+### Authentication
+
+- [OIDC Setup](./authentication/oidc-setup.md) — OIDC flow, openid-client v6, group access control
+- [Pocket ID](./authentication/pocket-id.md) — Pocket ID configuration, redirect URIs, TLS, troubleshooting
+- [RBAC](./authentication/rbac.md) — Direct OIDC vs impersonation, ClusterRole examples, debugging
+
+### Kubernetes
+
+- [Cluster Connection](./kubernetes/cluster-connection.md) — Connection methods, TLS, test endpoint, cluster selector
+- [Helm Releases](./kubernetes/helm-releases.md) — Release lifecycle, parsing, bulk operations, deploy wizard
+- [Impersonation](./kubernetes/impersonation.md) — Service account setup, group handling, 403 debugging
+
+### Deployment
+
+- [Docker](./deployment/docker.md) — Dockerfile, development compose, release script
+- [Kubernetes Deploy](./deployment/kubernetes-deploy.md) — Production K8s manifests (Deployment, Service, Ingress, ConfigMap)
+- [Health Probes](./deployment/health-probes.md) — Probe endpoints, K8s configuration, rewrite rules
+
+### Development
+
+- [Setup](./development/setup.md) — Project structure, npm scripts, ESLint, Prettier, TypeScript, VS Code
+- [Code Standards](./development/code-standards.md) — Lint rules, naming conventions, component patterns, import order
