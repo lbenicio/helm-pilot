@@ -4,6 +4,20 @@ All notable changes to this repository will be documented in this file.
 
 The format is based on "Keep a Changelog" and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.2] - 2026-06-26
+
+### Added
+- **Live Events page** (`/events`) — real-time stream of K8s events and Helm operations with auto-refresh, severity counters, and color-coded rows
+- **Cluster Health page** (`/health`) — detailed diagnostics with node inventory table, control plane component status, CPU/memory gauges, and API latency
+- Navbar links for Events, Health, and Search with active-state highlighting and breadcrumbs
+- Package version in navbar reads from `package.json` dynamically
+- All repos API routes migrated: `/api/repos/add`, `/api/repos/[name]` (DELETE), `/api/repos/search`, `/api/repos/auto-detect`
+
+### Fixed
+- K8s API TLS bypass (`NODE_TLS_REJECT_UNAUTHORIZED`) now applies to all K8s calls, not just OIDC
+- Release detail, rollback, uninstall, restart, quota, usage, and test endpoints added to K8s catch-all route
+- Dockerfile updated for Next.js standalone output with health probe rewrites
+
 ## [0.2.1] - 2026-06-26
 
 ### Added
