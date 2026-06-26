@@ -1,5 +1,7 @@
 # Helm Pilot
 
+![GitHub License](https://img.shields.io/github/license/lbenicio/helm-pilot?style=flat&color=blue)
+![GitHub Release](https://img.shields.io/github/v/release/lbenicio/helm-pilot?style=flat&color=blue)
 [![Dependabot Updates](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates)
 
 A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system. Helm Pilot provides a centralized web-based interface for engineering and platform teams to monitor, deploy, upgrade, and audit Helm releases across multiple clusters with robust security and real-time operational visibility.
