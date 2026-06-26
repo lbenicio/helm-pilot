@@ -99,8 +99,8 @@ K8S_CLUSTER_NAME="Production"
 
 ### Prerequisites
 
-- **Node.js** v22.x or later
-- **npm** v10.x or later
+- **Node.js** v24.x or later
+- **npm** v11.x or later
 
 ### Installation
 
@@ -153,14 +153,14 @@ This repository includes a multi-stage `Dockerfile` optimized for minimal footpr
 ### Build the Image
 
 ```bash
-docker build -t helm-pilot:latest .
+docker build --tag helm-pilot:latest .
 ```
 
 ### Run the Container
 
 ```bash
 docker run -d \
-  -p 3000:3000 \
+  --port 3000:3000 \
   --env-file .env \
   --name helm-pilot \
   helm-pilot:latest
