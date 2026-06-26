@@ -1,4 +1,3 @@
-import * as yaml from 'js-yaml';
 import zlib from 'zlib';
 
 export function parseHelmSecret(base64Data: string): Promise<any> {

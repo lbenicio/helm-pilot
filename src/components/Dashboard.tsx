@@ -5,15 +5,11 @@ import {
   Box,
   CheckCircle,
   CheckSquare,
-  HelpCircle,
-  Layers,
   Loader2,
-  Play,
   RefreshCw,
   RotateCcw,
   Search,
   SlidersHorizontal,
-  Square,
   Trash2,
   X,
 } from 'lucide-react';
@@ -450,17 +446,6 @@ export default function Dashboard({
     'bg-cyan-500',
   ];
 
-  const nsTextColorsList = [
-    'text-blue-600 dark:text-blue-400',
-    'text-purple-600 dark:text-purple-400',
-    'text-pink-600 dark:text-pink-400',
-    'text-orange-600 dark:text-orange-400',
-    'text-indigo-600 dark:text-indigo-400',
-    'text-teal-600 dark:text-teal-400',
-    'text-amber-600 dark:text-amber-400',
-    'text-cyan-600 dark:text-cyan-400',
-  ];
-
   const nsBgColorsList = [
     'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/30',
     'bg-purple-50 dark:bg-purple-950/20 border-purple-100 dark:border-purple-900/30',
@@ -726,7 +711,6 @@ export default function Dashboard({
               <div className="flex flex-wrap gap-1.5">
                 {sortedNsCounts.map(([ns, count], idx) => {
                   const colorClass = nsColorsList[idx % nsColorsList.length];
-                  const textClass = nsTextColorsList[idx % nsTextColorsList.length];
                   const bgClass = nsBgColorsList[idx % nsBgColorsList.length];
                   return (
                     <button

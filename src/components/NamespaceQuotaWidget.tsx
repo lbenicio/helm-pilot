@@ -1,4 +1,4 @@
-import { AlertCircle, Cpu, HardDrive, HelpCircle, Info, Layers, Radio, RefreshCw, Shield } from 'lucide-react';
+import { AlertCircle, Cpu, HardDrive, Info, Layers, Radio, RefreshCw, Shield } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 

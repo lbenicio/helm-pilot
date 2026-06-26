@@ -1,6 +1,6 @@
 'use client';
 
-import { Activity, RefreshCw, Terminal, Wifi, WifiOff } from 'lucide-react';
+import { Activity, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 

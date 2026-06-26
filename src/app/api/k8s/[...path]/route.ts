@@ -177,7 +177,7 @@ async function handleRoute(request: NextRequest, path: string, body?: any) {
           },
         ],
       });
-    } catch (e: any) {
+    } catch {
       return NextResponse.json({ quotas: [] });
     }
   }

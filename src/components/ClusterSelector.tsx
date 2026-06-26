@@ -1,4 +1,4 @@
-import { Check, Plus, RefreshCw, Server, ShieldAlert, Trash2, Wifi, WifiOff, X } from 'lucide-react';
+import { Check, Plus, RefreshCw, Server, ShieldAlert, Trash2, Wifi } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { K8sCluster } from '@/types/k8s-cluster.type';

@@ -1,6 +1,5 @@
 import {
   AlertCircle,
-  Calendar,
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
@@ -18,13 +17,11 @@ import {
   ShieldCheck,
   Tag,
   Terminal,
-  Trash2,
-  X,
+  Trash2
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 
-import { HelmRelease } from '@/types/helm-release.type';
 import { K8sCluster } from '@/types/k8s-cluster.type';
 
 import AntivirusScanner from './AntivirusScanner';

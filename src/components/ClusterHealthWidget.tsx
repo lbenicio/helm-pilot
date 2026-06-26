@@ -7,8 +7,6 @@ import {
   Clock,
   Cpu,
   Database,
-  Heart,
-  Layers,
   RefreshCw,
   Server,
   Wifi,

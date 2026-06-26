@@ -1,4 +1,4 @@
-import { Cpu, FolderPlus, Info, Library, Search, ShieldCheck, Trash2, X, Zap } from 'lucide-react';
+import { Cpu, Library, Search, ShieldCheck, Trash2, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 import { ChartRepo } from '@/types/chart-repo.type';

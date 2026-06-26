@@ -1,4 +1,4 @@
-import { ArrowRight, Key, Shield, ShieldCheck, Sparkles } from 'lucide-react';
+import { Key, Shield, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
 

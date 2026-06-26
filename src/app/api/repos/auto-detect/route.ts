@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { parseHelmSecret } from '@/lib/helm';
 import { callK8sApi, getK8sConfig } from '@/lib/k8s';
-import { logger } from '@/lib/logger';
 import { getRepos } from '@/lib/repos';
 
 const knownRepos = [
