@@ -4,6 +4,47 @@ All notable changes to this repository will be documented in this file.
 
 The format is based on "Keep a Changelog" and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.6] - 2026-06-26
+
+### Added
+
+- feat(deps): add react-router-dom dependency
+- feat(scripts): add automated release script and changelog generator
+- feat(linting): add ESLint, Prettier, and sort-imports config
+- feat(changelog): update to v0.2.2 with new pages and fixes
+- feat(app): add events and health monitoring pages
+- feat(search): add global search page with Enter-to-search from navbar
+- feat(api): restructure repo endpoints and add auto-detect
+- feat(api): add health endpoints and Helm release management
+
+### Changed
+
+- refactor(api): remove unused imports and variables
+
+### Fixed
+
+- fix(api): mark unused variables with underscore prefix
+
+### Documentation
+
+- docs(readme): update npm script commands to use namespaced naming
+- docs(changelog): add v0.2.4 release notes
+
+### Chore
+
+- chore(eslint): ignore caught and unused vars starting with underscore
+- chore(helm-pilot): bump version to 0.2.5
+- chore(package): update docker commands to use image subcommand
+- chore(helm-pilot): bump version to 0.2.3
+- chore(deps): update npm dependencies and add update scripts
+- chore(gitignore): add .next directory to ignore file
+
+### Misc
+
+- style(MobileNav): reorder imports and update min sizes
+- remove .next stuff
+- bootstrap repository
+
 ## [0.2.4] - 2026-06-26
 
 ### Added

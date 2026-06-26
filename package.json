@@ -2,7 +2,7 @@
   "name": "helm-pilot",
   "description": "A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system.",
   "private": true,
-  "version": "0.2.5",
+  "version": "0.2.6",
   "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
     "docker:release": "npm run docker:build && npm run docker:push",
     "deps:update": "npm-check-updates -u && npm run deps:install",
     "deps:install": "npm install --no-fund --no-audit --verbose",
-    "gen:release": "node scripts/release.mjs --bump"
+    "gen:changelog": "node scripts/changelog.mjs --bump"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
