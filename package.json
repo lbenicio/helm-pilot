@@ -12,8 +12,6 @@
     "type:check": "tsc --noEmit",
     "fmt:lint": "eslint . --fix",
     "fmt:format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
-    "docker:build": "docker image build --tag helm-pilot:latest .",
-    "docker:push": "docker image push helm-pilot:latest",
     "docker:release": "sh scripts/docker.sh",
     "docker:up": "docker compose up --build -d",
     "docker:down": "docker compose down",
