@@ -15,6 +15,9 @@
     "docker:build": "docker image build --tag helm-pilot:latest .",
     "docker:push": "docker image push helm-pilot:latest",
     "docker:release": "npm run docker:build && npm run docker:push",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "deps:update": "npm-check-updates -u && npm run deps:install",
     "deps:install": "npm install --no-fund --no-audit --verbose",
     "gen:changelog": "node scripts/changelog.mjs --bump"
