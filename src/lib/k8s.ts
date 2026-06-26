@@ -1,6 +1,11 @@
 import { NextRequest } from 'next/server';
 import { getSession } from './session';
 
+// Bypass TLS for self-signed certs (same as OIDC, needed for K8s API too)
+if (process.env.OIDC_SKIP_TLS_VERIFY === 'true') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
+
 export async function getK8sConfig(request: NextRequest) {
   const apiUrl = request.headers.get('x-k8s-api-url') || process.env.K8S_API_URL;
   const caCert = request.headers.get('x-k8s-ca-cert') || process.env.K8S_CA_CERT;

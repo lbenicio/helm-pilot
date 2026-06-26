@@ -9,7 +9,9 @@
     "start:dev": "next dev --port 3000",
     "start:prod": "next start --port 3000",
     "build:prod": "next build",
-    "type:check": "tsc --noEmit"
+    "type:check": "tsc --noEmit",
+    "docker:build": "docker build --tag helm-pilot:latest .",
+    "docker:push": "docker push helm-pilot:latest"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

@@ -7,6 +7,7 @@ import ClusterSelector from './ClusterSelector';
 import ContextMenu from './ContextMenu';
 import { Ship, Library, LayoutDashboard, LogOut, Moon, Sun, Search, X, ChevronRight, Folder, Copy } from 'lucide-react';
 import { motion } from 'motion/react';
+import pkg from '@/../package.json';
 
 export default function Header() {
   const { session, handleLogout, clusters, activeCluster, handleAddCluster, handleRemoveCluster, handleSelectCluster, isDarkMode, setIsDarkMode, globalSearchQuery, setGlobalSearchQuery, selectedNamespace, setSelectedNamespace } = useApp();
@@ -29,7 +30,7 @@ export default function Header() {
             <div className="p-2 bg-blue-600 rounded-xl text-white shadow-sm"><Ship className="w-5 h-5" /></div>
             <div>
               <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">Helm Manager</h1>
-              <span className="text-[10px] text-slate-400 font-mono block">v1.2.0-beta</span>
+              <span className="text-[10px] text-slate-400 font-mono block">v{pkg.version}</span>
             </div>
           </button>
 
