@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
     if (Object.keys(searchParams).length > 0) {
       const tokenSet = await client.callback(redirectUri, searchParams, { state: oidcState });
       const claims = tokenSet.claims();
-
       email = (claims.email as string) || email;
       name = (claims.name || claims.preferred_username || claims.given_name || name) as string;
       token = tokenSet.id_token || tokenSet.access_token;
@@ -35,9 +34,7 @@ export async function GET(request: NextRequest) {
           const userInfo = await client.userinfo(tokenSet.access_token);
           email = (userInfo.email as string) || email;
           name = (userInfo.name || userInfo.preferred_username || userInfo.given_name || name) as string;
-        } catch (e) {
-          logger.warn('Could not fetch userinfo:', e);
-        }
+        } catch { logger.warn('Could not fetch userinfo'); }
       }
     }
   } catch (err: any) {
@@ -45,19 +42,16 @@ export async function GET(request: NextRequest) {
     return new NextResponse(`OIDC Callback failed: ${err.message}`, { status: 401 });
   }
 
-  // Authorization check
   const allowedGroups = process.env.OIDC_ALLOWED_GROUPS;
   if (allowedGroups) {
     const allowed = allowedGroups.split(',').map(g => g.trim().toLowerCase());
-    const userLower = groups.map(g => g.toLowerCase());
-    if (!allowed.some(g => userLower.includes(g))) {
-      logger.warn(`Access denied for ${email} — groups ${groups}`);
+    if (!allowed.some(g => groups.map(x => x.toLowerCase()).includes(g))) {
+      logger.warn(`Access denied for ${email}`);
       return new NextResponse('Access denied: unauthorized groups.', { status: 403 });
     }
   }
 
   logger.debug('[OIDC] Login:', { email, name, groups });
-
   const user: SessionUser = { email, name, token, groups };
   const response = await setSession(user);
   response.cookies.set('oidc_state', '', { maxAge: 0, path: '/' });
