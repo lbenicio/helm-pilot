@@ -37,7 +37,7 @@ Helm Pilot is designed as a modern, high-performance, full-stack application:
 ├── package.json          # Node dependency manifest and automated task runner
 ├── vite.config.ts        # Client asset-bundling and development proxy settings
 ├── tsconfig.json         # Strict TypeScript compiler definitions
-├── assets/               # Static graphics, logos, and UI asset elements
+├── public/               # Static graphics, logos, and UI asset elements
 ├── src/
 │   ├── main.tsx          # Client-side SPA mounting entrypoint
 │   ├── App.tsx           # Global routing, core layout, and state provider
@@ -65,17 +65,32 @@ Helm Pilot is designed as a modern, high-performance, full-stack application:
 Configure the application by creating a `.env` file at the root of the project using the structure provided below:
 
 ```bash
-# Application Routing
-APP_URL="https://your-domain.com"
+# APP_URL: The URL where this applet is hosted.
+# Used for self-referential links, OAuth callbacks, and API endpoints.
+APP_URL="http://localhost:3000"
+# Log level: error | warn | info | debug (default: info)
+# Set to "debug" during development to see verbose request logs.
+LOG_LEVEL="info"
 
 # OIDC OAuth2 Authentication Configuration
 OIDC_CLIENT_ID="your_client_id_here"
 OIDC_CLIENT_SECRET="your_client_secret_here"
 OIDC_ISSUER_URL="https://your-oidc-provider.com"
 OIDC_SCOPES="openid profile email"
+# Set to "true" to skip TLS validation of OIDC provider certificates in dev/sandbox environments
+OIDC_SKIP_TLS_VERIFY="true"
+# Comma-separated list of OIDC groups allowed to access the app.
+# If set, only users belonging to at least one of these groups can log in.
+# Leave empty to allow all authenticated users.
+# OIDC_ALLOWED_GROUPS="admin, developers"
 
-# Set to "true" to skip TLS validation of OIDC provider certificates (for local or dev testing)
-OIDC_SKIP_TLS_VERIFY="false"
+# Default Kubernetes cluster (optional — used when no cluster is configured in the UI)
+K8S_API_URL="https://your-k8s-api.example.com"
+K8S_CLUSTER_NAME="Production"
+# K8s service account token for impersonation (optional).
+# When set, the server authenticates as this SA and impersonates the OIDC user.
+# The SA needs "impersonate" verb on "users" resource.
+# K8S_TOKEN="your-sa-token-here"
 ```
 
 ---

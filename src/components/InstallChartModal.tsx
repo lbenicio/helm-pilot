@@ -154,7 +154,7 @@ export default function InstallChartModal({ chart, activeCluster, onClose, onSuc
               </div>
             ) : (
               /* Step 2: Advanced Values Editor */
-              <div className="flex flex-col h-full min-h-[300px]">
+              <div className="flex flex-col h-full min-h-75">
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">values.yaml</label>
                   <button type="button" onClick={formatYaml} className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
