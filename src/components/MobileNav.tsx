@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
 import { Activity, Heart, LayoutDashboard, Library } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 
 const tabs = [
   { path: '/', icon: LayoutDashboard, label: 'Home' },
@@ -23,7 +23,7 @@ export default function MobileNav() {
           <button
             key={path}
             onClick={() => router.push(path)}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] min-h-[48px] rounded-lg transition-colors tap-highlight-transparent ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-12 min-h-12 rounded-lg transition-colors tap-highlight-transparent ${
               isActive(path) ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'
             }`}
           >
