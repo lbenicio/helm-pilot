@@ -1,16 +1,4 @@
-import {
-  Activity,
-  AlertCircle,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Cpu,
-  Database,
-  RefreshCw,
-  Server,
-  Wifi,
-} from 'lucide-react';
+import { Activity, AlertCircle, CheckCircle2, ChevronDown, ChevronUp, Clock, Cpu, Database, RefreshCw, Server, Wifi } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useRef, useState } from 'react';
 

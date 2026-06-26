@@ -17,7 +17,7 @@ import {
   ShieldCheck,
   Tag,
   Terminal,
-  Trash2
+  Trash2,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
