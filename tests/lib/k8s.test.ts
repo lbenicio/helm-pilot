@@ -217,3 +217,176 @@ describe('k8s — getK8sConfig', () => {
     expect(process.env.NODE_TLS_REJECT_UNAUTHORIZED).toBe('0');
   });
 });
+
+// ---------------------------------------------------------------------------
+// callK8sApi tests
+// ---------------------------------------------------------------------------
+describe('k8s — callK8sApi', () => {
+  const mockFetch = vi.fn();
+
+  beforeEach(() => {
+    vi.resetModules();
+    vi.clearAllMocks();
+    vi.unstubAllEnvs();
+    vi.stubGlobal('fetch', mockFetch);
+    stubEnv({ OIDC_SKIP_TLS_VERIFY: undefined as any });
+  });
+
+  function mockOkResponse(data: any) {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => data,
+    });
+  }
+
+  function mockErrorResponse(status: number, body: string) {
+    mockFetch.mockResolvedValue({
+      ok: false,
+      status,
+      text: async () => body,
+    });
+  }
+
+  // -----------------------------------------------------------------------
+  // Non-impersonation path (no impersonateUser)
+  // -----------------------------------------------------------------------
+  it('makes a simple authenticated API call (non-impersonation)', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ items: [] });
+    const config = { apiUrl: 'https://k8s.example.com', token: 'tk' };
+    const result = await callK8sApi(config, '/api/v1/pods');
+    expect(result).toEqual({ items: [] });
+    expect(mockFetch).toHaveBeenCalledWith('https://k8s.example.com/api/v1/pods', {
+      headers: { Authorization: 'Bearer tk', 'Content-Type': 'application/json' },
+    });
+  });
+
+  it('merges custom options headers in non-impersonation path', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ done: true });
+    const config = { apiUrl: 'https://k8s.example.com', token: 'tk' };
+    const result = await callK8sApi(config, '/api/v1/pods', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/merge-patch+json', 'X-Custom': 'val' },
+    });
+    expect(result).toEqual({ done: true });
+    expect(mockFetch).toHaveBeenCalledWith('https://k8s.example.com/api/v1/pods', {
+      method: 'PATCH',
+      headers: {
+        Authorization: 'Bearer tk',
+        'Content-Type': 'application/merge-patch+json',
+        'X-Custom': 'val',
+      },
+    });
+  });
+
+  it('throws on non-OK response in non-impersonation path', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockErrorResponse(403, 'Forbidden');
+    const config = { apiUrl: 'https://k8s.example.com', token: 'tk' };
+    await expect(callK8sApi(config, '/api/v1/secrets')).rejects.toThrow('Kubernetes API error 403: Forbidden');
+  });
+
+  // -----------------------------------------------------------------------
+  // Impersonation path (config.impersonateUser is set)
+  // -----------------------------------------------------------------------
+  it('sends impersonation headers when impersonateUser is set', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ items: [] });
+    const config = { apiUrl: 'https://k8s.example.com', token: 'admin-tk', impersonateUser: 'user@corp.com' };
+    await callK8sApi(config, '/api/v1/pods');
+    const callArgs = mockFetch.mock.calls[0];
+    expect(callArgs[0]).toBe('https://k8s.example.com/api/v1/pods');
+    const headers: [string, string][] = callArgs[1].headers;
+    expect(headers).toEqual(
+      expect.arrayContaining([
+        ['Authorization', 'Bearer admin-tk'],
+        ['Content-Type', 'application/json'],
+        ['Impersonate-User', 'user@corp.com'],
+      ]),
+    );
+  });
+
+  it('includes Impersonate-Group header when impersonateGroups is non-empty', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ items: [] });
+    const config = {
+      apiUrl: 'https://k8s.example.com',
+      token: 'admin-tk',
+      impersonateUser: 'user@corp.com',
+      impersonateGroups: ['devs', 'admins'],
+    };
+    await callK8sApi(config, '/api/v1/pods');
+    const headers: [string, string][] = mockFetch.mock.calls[0][1].headers;
+    expect(headers).toEqual(
+      expect.arrayContaining([
+        ['Impersonate-User', 'user@corp.com'],
+        ['Impersonate-Group', 'devs'],
+      ]),
+    );
+    // Only the first group is sent
+    const groupHeaders = headers.filter(([k]) => k === 'Impersonate-Group');
+    expect(groupHeaders).toHaveLength(1);
+    expect(groupHeaders[0][1]).toBe('devs');
+  });
+
+  it('does NOT add Impersonate-Group header when groups array is empty', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ items: [] });
+    const config = {
+      apiUrl: 'https://k8s.example.com',
+      token: 'admin-tk',
+      impersonateUser: 'user@corp.com',
+      impersonateGroups: [],
+    };
+    await callK8sApi(config, '/api/v1/pods');
+    const headers: [string, string][] = mockFetch.mock.calls[0][1].headers;
+    expect(headers).toEqual(
+      expect.arrayContaining([
+        ['Impersonate-User', 'user@corp.com'],
+      ]),
+    );
+    const groupHeaders = headers.filter(([k]) => k === 'Impersonate-Group');
+    expect(groupHeaders).toHaveLength(0);
+  });
+
+  it('does NOT add Impersonate-Group header when groups is undefined', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ items: [] });
+    const config = {
+      apiUrl: 'https://k8s.example.com',
+      token: 'admin-tk',
+      impersonateUser: 'user@corp.com',
+    };
+    await callK8sApi(config, '/api/v1/pods');
+    const headers: [string, string][] = mockFetch.mock.calls[0][1].headers;
+    const groupHeaders = headers.filter(([k]) => k === 'Impersonate-Group');
+    expect(groupHeaders).toHaveLength(0);
+  });
+
+  it('merges custom options headers in impersonation path', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockOkResponse({ done: true });
+    const config = { apiUrl: 'https://k8s.example.com', token: 'admin-tk', impersonateUser: 'u@c.com' };
+    await callK8sApi(config, '/api/v1/pods', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/merge-patch+json', 'X-Custom': 'val' },
+    });
+    const headers: [string, string][] = mockFetch.mock.calls[0][1].headers;
+    expect(headers).toEqual(
+      expect.arrayContaining([
+        ['Authorization', 'Bearer admin-tk'],
+        ['Content-Type', 'application/merge-patch+json'],
+        ['Impersonate-User', 'u@c.com'],
+        ['X-Custom', 'val'],
+      ]),
+    );
+  });
+
+  it('throws on non-OK response in impersonation path', async () => {
+    const { callK8sApi } = await k8sModule();
+    mockErrorResponse(500, 'Internal Server Error');
+    const config = { apiUrl: 'https://k8s.example.com', token: 'admin-tk', impersonateUser: 'u@c.com' };
+    await expect(callK8sApi(config, '/api/v1/secrets')).rejects.toThrow('Kubernetes API error 500: Internal Server Error');
+  });
+});

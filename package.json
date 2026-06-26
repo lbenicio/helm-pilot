@@ -10,7 +10,7 @@
     "start:prod": "next start --port 3000",
     "build:prod": "next build",
     "type:check": "tsc --noEmit",
-    "test:unit": "vitest run",
+    "test:unit": "vitest run --silent",
     "test:cov": "vitest run --coverage --silent",
     "test:watch": "vitest",
     "fmt:lint": "eslint . --fix",

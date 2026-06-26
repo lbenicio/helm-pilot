@@ -46,6 +46,21 @@ describe('helm', () => {
       expect(parsed).toEqual(release);
     });
 
+    it('roundtrips complex nested objects with unicode characters', async () => {
+      const release = {
+        name: 'unicode-release',
+        config: {
+          description: '日本語テスト 🎉',
+          notes: 'Café résumé naïve',
+          emoji: '🚀✨',
+          nested: { 中文: '한국어', 日本語: 'テスト' },
+        },
+      };
+      const encoded = await encodeHelmRelease(release);
+      const parsed = await parseHelmSecret(encoded);
+      expect(parsed).toEqual(release);
+    });
+
     it('roundtrip preserves all data types (strings, numbers, booleans, null, arrays)', async () => {
       const release = {
         str: 'hello',
@@ -85,6 +100,12 @@ describe('helm', () => {
       const { gzipSync } = await import('zlib');
       const badData = gzipSync(Buffer.from('not-json')).toString('base64');
       await expect(parseHelmSecret(badData)).rejects.toThrow();
+    });
+
+    it('rejects on circular references', async () => {
+      const obj: any = { name: 'circular' };
+      obj.self = obj;
+      await expect(encodeHelmRelease(obj)).rejects.toThrow();
     });
 
     it('handles large release objects', async () => {
