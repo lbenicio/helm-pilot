@@ -12,8 +12,8 @@
     "type:check": "tsc --noEmit",
     "fmt:lint": "eslint . --fix",
     "fmt:format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
-    "docker:build": "docker build --tag helm-pilot:latest .",
-    "docker:push": "docker push helm-pilot:latest",
+    "docker:build": "docker image build --tag helm-pilot:latest .",
+    "docker:push": "docker image push helm-pilot:latest",
     "docker:release": "npm run docker:build && npm run docker:push",
     "deps:update": "npm-check-updates -u && npm run deps:install",
     "deps:install": "npm install --no-fund --no-audit --verbose"
