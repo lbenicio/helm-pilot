@@ -28,11 +28,11 @@ vi.mock('recharts', () => {
     <div data-testid={`area-${dataKey}`} data-name={name} data-stroke={stroke} data-fill={fill} />
   );
 
-  const MockCartesianGrid = (props: any) => <div data-testid="cartesian-grid" />;
+  const MockCartesianGrid = (_props: any) => <div data-testid="cartesian-grid" />;
   const MockXAxis = (props: any) => <div data-testid="x-axis" data-key={props.dataKey} />;
   const MockYAxis = (props: any) => <div data-testid="y-axis" data-unit={props.unit} />;
-  const MockTooltip = (props: any) => <div data-testid="tooltip" />;
-  const MockLegend = (props: any) => <div data-testid="legend" />;
+  const MockTooltip = (_props: any) => <div data-testid="tooltip" />;
+  const MockLegend = (_props: any) => <div data-testid="legend" />;
   const MockReferenceLine = ({ y, stroke, label }: any) => (
     <div data-testid="reference-line" data-y={y} data-stroke={stroke}>
       {label?.value && <span data-testid="ref-label">{label.value}</span>}
@@ -60,7 +60,7 @@ import ResourceUsageChart from '@/components/ResourceUsageChart';
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
-function mockMetrics(overrides: Partial<ReturnType<typeof defaultMetrics>[0]>[] = []) {
+function mockMetrics(overrides: any[] = []) {
   const base = [
     {
       time: '12:00',

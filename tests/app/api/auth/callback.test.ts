@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // ---------------------------------------------------------------------------
 // Hoisted env – shared across all tests, mutated per-test
 // ---------------------------------------------------------------------------
-const env = vi.hoisted(() => ({ ...process.env }));
+
 
 // ---------------------------------------------------------------------------
 // Mock logger

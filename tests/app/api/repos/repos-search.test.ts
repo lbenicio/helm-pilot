@@ -39,7 +39,7 @@ describe('GET /api/repos/search', () => {
     vi.doMock('@/lib/logger', () => ({ logger: { debug: mockLoggerDebug } }));
     vi.doMock('js-yaml', () => ({ load: mockYamlLoad }));
 
-    globalThis.fetch = mockFetch;
+    globalThis.fetch = mockFetch as any;
   });
 
   describe('empty state', () => {

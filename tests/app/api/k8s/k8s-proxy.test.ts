@@ -33,10 +33,9 @@ vi.mock('next/server', () => ({
 // ---------------------------------------------------------------------------
 // Now import mocked modules + the route handlers
 // ---------------------------------------------------------------------------
-import { NextResponse } from 'next/server';
 
-import { callK8sApi, getK8sConfig } from '@/lib/k8s';
 import { encodeHelmRelease, parseHelmSecret } from '@/lib/helm';
+import { callK8sApi, getK8sConfig } from '@/lib/k8s';
 
 // ---------------------------------------------------------------------------
 // Dynamically import the route so vi.mock hoisting applies cleanly
@@ -98,7 +97,7 @@ describe('k8s proxy routes', () => {
   it('returns 401 when no cluster config is available', async () => {
     vi.mocked(getK8sConfig).mockResolvedValue(null);
     const { GET } = await routeModule();
-    const res = await GET(mockGetRequest(), mockParams(['test']));
+    const res = (await GET(mockGetRequest(), mockParams(['test']))) as any;
     expect(res.status).toBe(401);
     expect(res.body).toMatchObject({ error: 'Kubernetes Cluster Authentication is required.' });
   });
@@ -110,6 +109,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -119,7 +119,7 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(mockGetRequest(), mockParams(['test']));
+    const res = (await GET(mockGetRequest(), mockParams(['test']))) as any;
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       success: true,
@@ -134,6 +134,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockImplementation(async (_config, path) => {
       if (path === '/api/v1/nodes') {
@@ -169,10 +170,10 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest({ headers: { 'x-k8s-cluster-name': 'MyCluster' } }),
       mockParams(['cluster-health']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -198,6 +199,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -221,7 +223,7 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(mockGetRequest(), mockParams(['releases']));
+    const res = (await GET(mockGetRequest(), mockParams(['releases']))) as any;
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(1);
     expect(res.body[0]).toMatchObject({
@@ -239,14 +241,15 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({ items: [] });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest({ searchParams: { namespace: 'prod' } }),
       mockParams(['releases']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(callK8sApi).toHaveBeenCalledWith(
@@ -262,6 +265,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -287,7 +291,7 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(mockGetRequest(), mockParams(['activity']));
+    const res = (await GET(mockGetRequest(), mockParams(['activity']))) as any;
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(2);
@@ -314,6 +318,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -326,10 +331,10 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest(),
       mockParams(['namespaces', 'default', 'quota']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body.quotas).toBeDefined();
@@ -346,13 +351,14 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest(),
       mockParams(['namespaces', 'all', 'quota']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body.quotas).toHaveLength(3);
@@ -368,6 +374,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -386,10 +393,10 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest(),
       mockParams(['releases', 'default', 'my-app', 'usage']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body.release).toBe('my-app');
@@ -412,6 +419,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     // First call: secrets for release
     // Second call: pods for the namespace
@@ -459,10 +467,10 @@ describe('k8s proxy routes', () => {
     });
 
     const { GET } = await routeModule();
-    const res = await GET(
+    const res = (await GET(
       mockGetRequest(),
       mockParams(['releases', 'default', 'my-app']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body.name).toBe('my-app');
@@ -488,6 +496,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -521,10 +530,10 @@ describe('k8s proxy routes', () => {
     vi.mocked(encodeHelmRelease).mockResolvedValue('new-encoded-release');
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({ revision: 3 }),
       mockParams(['releases', 'default', 'my-app', 'rollback']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
@@ -537,13 +546,14 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({}),
       mockParams(['releases', 'default', 'my-app', 'rollback']),
-    );
+    )) as any;
 
     expect(res.status).toBe(400);
     expect(res.body).toMatchObject({ error: 'Revision required' });
@@ -556,12 +566,13 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({ items: [] });
     vi.mocked(encodeHelmRelease).mockResolvedValue('encoded-release-data');
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({
         name: 'my-app',
         namespace: 'default',
@@ -571,7 +582,7 @@ describe('k8s proxy routes', () => {
         isUpgrade: false,
       }),
       mockParams(['releases', 'install']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
@@ -584,13 +595,14 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({ name: 'my-app' }), // missing namespace and chartName
       mockParams(['releases', 'install']),
-    );
+    )) as any;
 
     expect(res.status).toBe(400);
     expect(res.body).toMatchObject({ error: 'Missing fields' });
@@ -603,6 +615,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     vi.mocked(callK8sApi).mockResolvedValue({
       items: [
@@ -612,10 +625,10 @@ describe('k8s proxy routes', () => {
     });
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({}),
       mockParams(['releases', 'default', 'my-app', 'uninstall']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
@@ -642,6 +655,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
     // callK8sApi is called multiple times: list deployments, patch each, list statefulsets, list daemonsets
     vi.mocked(callK8sApi)
@@ -657,10 +671,10 @@ describe('k8s proxy routes', () => {
       .mockResolvedValueOnce({ items: [] });
 
     const { POST } = await routeModule();
-    const res = await POST(
+    const res = (await POST(
       mockPostRequest({}),
       mockParams(['releases', 'default', 'my-app', 'restart']),
-    );
+    )) as any;
 
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({
@@ -677,10 +691,11 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue({
       apiUrl: 'https://k8s.test',
       token: 'tk',
+      caCert: 'test-ca',
     });
 
     const { GET } = await routeModule();
-    const res = await GET(mockGetRequest(), mockParams(['unknown', 'path']));
+    const res = (await GET(mockGetRequest(), mockParams(['unknown', 'path']))) as any;
 
     expect(res.status).toBe(404);
     expect(res.body).toMatchObject({ error: 'Not found' });
@@ -693,7 +708,7 @@ describe('k8s proxy routes', () => {
     vi.mocked(getK8sConfig).mockResolvedValue(null);
 
     const { DELETE } = await routeModule();
-    const res = await DELETE(mockGetRequest(), mockParams(['test']));
+    const res = (await DELETE(mockGetRequest(), mockParams(['test']))) as any;
 
     // Should hit auth guard → 401
     expect(res.status).toBe(401);

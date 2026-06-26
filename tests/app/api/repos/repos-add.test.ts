@@ -29,10 +29,10 @@ vi.mock('next/server', () => ({
 // ---------------------------------------------------------------------------
 const reposAddModule = () => import('@/app/api/repos/add/route');
 
-function mockRequest(body: Record<string, unknown>) {
+function mockRequest(data: any): any {
   return {
-    json: vi.fn().mockResolvedValueOnce(body),
-  } as unknown as Request;
+    json: async () => data,
+  };
 }
 
 describe('POST /api/repos/add', () => {

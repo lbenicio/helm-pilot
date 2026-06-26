@@ -11,7 +11,6 @@ describe('sitemap', () => {
 
   it('includes the homepage with priority 1', () => {
     const result = sitemap();
-    const home = result.find((entry) => entry.url.endsWith('/') && !entry.url.endsWith('/charts') && !entry.url.endsWith('/events') && !entry.url.endsWith('/health') && !entry.url.endsWith('/search'));
     // Home entry is the one whose path is just the base URL
     const homeEntry = result.find((entry) => {
       const url = new URL(entry.url);

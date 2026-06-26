@@ -84,7 +84,7 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
 
   if (loading && metrics.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-10 flex flex-col items-center justify-center space-y-3 shadow-sm min-h-[300px]">
+      <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-10 flex flex-col items-center justify-center space-y-3 shadow-sm min-h-75">
         <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
         <p className="text-xs text-slate-400">Loading container resources & performance metrics...</p>
       </div>
@@ -93,7 +93,7 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
 
   if (error && metrics.length === 0) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-10 text-center space-y-3 shadow-sm min-h-[300px] flex flex-col justify-center items-center">
+      <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-10 text-center space-y-3 shadow-sm min-h-75 flex flex-col justify-center items-center">
         <AlertTriangle className="w-8 h-8 text-amber-500" />
         <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">Metrics Offline</h4>
         <p className="text-[10px] text-slate-500 max-w-sm">{error}</p>

@@ -5,17 +5,17 @@ import robots from '@/app/robots';
 describe('robots', () => {
   it('returns allow rule for /', () => {
     const result = robots();
-    expect(result.rules.allow).toBe('/');
+    expect((result.rules as any).allow).toBe('/');
   });
 
   it('returns disallow rules for /api/ and /auth/', () => {
     const result = robots();
-    expect(result.rules.disallow).toEqual(['/api/', '/auth/']);
+    expect((result.rules as any).disallow).toEqual(['/api/', '/auth/']);
   });
 
   it('returns userAgent as *', () => {
     const result = robots();
-    expect(result.rules.userAgent).toBe('*');
+    expect((result.rules as any).userAgent).toBe('*');
   });
 
   it('returns a sitemap URL', () => {
@@ -26,6 +26,6 @@ describe('robots', () => {
 
   it('sitemap URL ends with /sitemap.xml', () => {
     const result = robots();
-    expect(result.sitemap!.endsWith('/sitemap.xml')).toBe(true);
+    expect((result.sitemap as string).endsWith('/sitemap.xml')).toBe(true);
   });
 });

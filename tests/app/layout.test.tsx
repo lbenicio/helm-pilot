@@ -120,9 +120,9 @@ describe('RootLayout', () => {
 
     it('has favicon icons defined', () => {
       expect(RootLayoutModule.metadata.icons).toBeDefined();
-      expect(RootLayoutModule.metadata.icons.icon).toHaveLength(2);
-      expect(RootLayoutModule.metadata.icons.icon[0].sizes).toBe('32x32');
-      expect(RootLayoutModule.metadata.icons.icon[1].sizes).toBe('16x16');
+      expect((RootLayoutModule.metadata.icons as any).icon).toHaveLength(2);
+      expect((RootLayoutModule.metadata.icons as any).icon[0].sizes).toBe('32x32');
+      expect((RootLayoutModule.metadata.icons as any).icon[1].sizes).toBe('16x16');
     });
 
     it('has manifest defined', () => {

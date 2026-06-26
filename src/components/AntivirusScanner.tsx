@@ -1,17 +1,12 @@
 import {
   AlertTriangle,
   Check,
-  CheckCircle2,
   Copy,
-  EyeOff,
-  Gauge,
-  Info,
   Lock,
   RefreshCw,
   Shield,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   Terminal as TerminalIcon,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -319,7 +314,7 @@ export default function AntivirusScanner({ manifest, releaseName }: AntivirusSca
         {/* Dynamic scan radar vs. final metric gauges */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
           {/* Radar Scanner Visual Block (4 cols) */}
-          <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/60 rounded-xl relative overflow-hidden min-h-[220px]">
+          <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/60 rounded-xl relative overflow-hidden min-h-55">
             {isScanning ? (
               <div className="space-y-4 flex flex-col items-center">
                 {/* Simulated Radar Screen */}
@@ -400,7 +395,7 @@ export default function AntivirusScanner({ manifest, releaseName }: AntivirusSca
               <span>K8S STATIC SCANNER</span>
             </div>
 
-            <div className="bg-slate-900 dark:bg-black rounded-xl p-4 border border-slate-800 font-mono text-[10px] leading-relaxed text-[#4AF626] shadow-inner h-[220px] overflow-y-auto scrollbar-thin select-text">
+            <div className="bg-slate-900 dark:bg-black rounded-xl p-4 border border-slate-800 font-mono text-[10px] leading-relaxed text-[#4AF626] shadow-inner h-55 overflow-y-auto scrollbar-thin select-text">
               <div className="space-y-1.5">
                 {terminalLogs.map((log, i) => {
                   let textClass = 'text-emerald-400';
