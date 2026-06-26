@@ -1,6 +1,8 @@
 # Helm Pilot
 
-A web-based Helm Chart and Kubernetes Release Manager with OIDC authentication. Built with Next.js 16 App Router.
+[![Dependabot Updates](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates)
+
+A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system. Helm Pilot provides a centralized web-based interface for engineering and platform teams to monitor, deploy, upgrade, and audit Helm releases across multiple clusters with robust security and real-time operational visibility.
 
 ## Index
 
@@ -17,7 +19,7 @@ A web-based Helm Chart and Kubernetes Release Manager with OIDC authentication. 
 - [License](#license)
 
 
-## Features
+## Key Features
 
 - **Multi-Cluster Support** — Switch between configured clusters with latency and health indicators
 - **Release Dashboard** — View, search, filter, and bulk-manage Helm releases across namespaces
@@ -31,7 +33,7 @@ A web-based Helm Chart and Kubernetes Release Manager with OIDC authentication. 
 - **Dark Mode** — Full light/dark theme with system preference detection
 - **Mobile Responsive** — Bottom navigation bar, touch-optimized controls, PWA meta tags
 
-## Architecture
+## System Architecture
 
 - **Frontend**: Next.js 16 App Router, React 19, Tailwind CSS 4, Recharts, Motion
 - **Backend**: Next.js API routes, `openid-client` v6 for OIDC, `jose` for JWT sessions
