@@ -23,7 +23,7 @@ export function parseHelmSecret(base64Data: string): Promise<any> {
               reject(e);
             }
           });
-        } catch (e) {
+        } catch {
           reject(err);
         }
       });
