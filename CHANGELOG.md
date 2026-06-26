@@ -4,6 +4,74 @@ All notable changes to this repository will be documented in this file.
 
 The format is based on "Keep a Changelog" and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-06-26
+
+### Added
+
+- feat(vitest): add coverage reporting with v8 provider
+- feat(install): add multi-step install flow with advanced config
+- feat(docker): add dev Docker setup and update ignore files
+- feat(deps): add react-router-dom dependency
+- feat(scripts): add automated release script and changelog generator
+- feat(linting): add ESLint, Prettier, and sort-imports config
+- feat(changelog): update to v0.2.2 with new pages and fixes
+- feat(app): add events and health monitoring pages
+- feat(search): add global search page with Enter-to-search from navbar
+- feat(api): restructure repo endpoints and add auto-detect
+- feat(api): add health endpoints and Helm release management
+
+### Changed
+
+- refactor(tests): clean up imports and fix type assertions
+- refactor(api): remove unused imports and variables
+
+### Fixed
+
+- fix(helm): remove unused catch parameter
+- fix(project): downgrade version from 0.2.6 to 0.2.5
+- fix(api): mark unused variables with underscore prefix
+
+### Documentation
+
+- docs(README): add status badge and improve descriptions
+- docs(readme): add table of contents
+- docs(readme): rewrite for Next.js migration
+- docs(README): restructure and simplify section index pages
+- docs: remove contributing guide, add error pages and SEO routes
+- docs(deployment): add deployment and development documentation
+- docs(kubernetes): add docs for cluster connection, helm releases, and impersonation
+- docs(authentication): add OIDC authentication and Kubernetes RBAC documentation
+- docs(README): update prerequisites and Docker instructions
+- docs(architecture): add comprehensive system documentation
+- docs(readme): update npm script commands to use namespaced naming
+- docs(changelog): add v0.2.4 release notes
+
+### Testing
+
+- test(api): add unit tests for auth callback, k8s proxy, repos, and UI pages
+- test(tests): add comprehensive test suites for 6 components
+- test(project): add Vitest test suite with React Testing Library
+
+### Chore
+
+- chore(readme): update prerequisite versions
+- chore(package): remove unused docker build and push scripts
+- chore(deps): update baseline-browser-mapping and es-toolkit
+- chore(deps): upgrade to Node 24 and ES2024
+- chore(eslint): ignore caught and unused vars starting with underscore
+- chore(helm-pilot): bump version to 0.2.5
+- chore(package): update docker commands to use image subcommand
+- chore(helm-pilot): bump version to 0.2.3
+- chore(deps): update npm dependencies and add update scripts
+- chore(gitignore): add .next directory to ignore file
+
+### Misc
+
+- ci(release): add GHCR release workflow
+- style(MobileNav): reorder imports and update min sizes
+- remove .next stuff
+- bootstrap repository
+
 ## [0.2.5] - 2026-06-26
 
 ### Added
