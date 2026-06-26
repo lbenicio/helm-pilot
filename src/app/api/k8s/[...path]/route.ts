@@ -25,7 +25,7 @@ async function handleRoute(request: NextRequest, path: string, body?: any) {
   if (path === 'cluster-health' && request.method === 'GET') {
     const polledAt = new Date().toISOString();
     try {
-      const [nodes, components] = await Promise.all([callK8sApi(config, `${base}/nodes`), callK8sApi(config, `${base}/componentstatuses`)]);
+      const [nodes, _components] = await Promise.all([callK8sApi(config, `${base}/nodes`), callK8sApi(config, `${base}/componentstatuses`)]);
       const nodeList = (nodes.items || []).map((n: any) => {
         const conditions = n.status?.conditions || [];
         const ready = conditions.find((c: any) => c.type === 'Ready');

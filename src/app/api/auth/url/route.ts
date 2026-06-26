@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { generateState, getAuthorizationUrl } from '@/lib/oidc';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   if (!process.env.OIDC_CLIENT_ID || !process.env.OIDC_CLIENT_SECRET) {
     return NextResponse.json({ error: 'OIDC not configured.' }, { status: 500 });
   }

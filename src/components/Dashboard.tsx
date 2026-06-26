@@ -1062,7 +1062,7 @@ export default function Dashboard({
                   ))
                 ) : (
                   <AnimatePresence initial={false}>
-                    {filteredReleases.map((release, index) => {
+                    {filteredReleases.map((release, _index) => {
                       const isSelected = selectedReleases.includes(`${release.namespace}/${release.name}`);
                       return (
                         <motion.tr
