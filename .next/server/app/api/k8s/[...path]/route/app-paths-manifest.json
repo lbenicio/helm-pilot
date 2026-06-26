@@ -1,3 +1,0 @@
-{
-  "/api/k8s/[...path]/route": "app/api/k8s/[...path]/route.js"
-}
