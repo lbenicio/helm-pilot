@@ -12,16 +12,18 @@
     "type:check": "tsc --noEmit",
     "docker:build": "docker build --tag helm-pilot:latest .",
     "docker:push": "docker push helm-pilot:latest",
-    "docker:release": "npm run docker:build && npm run docker:push"
+    "docker:release": "npm run docker:build && npm run docker:push",
+    "deps:update": "npm-check-updates -u && npm run deps:install",
+    "deps:install": "npm install --no-fund --no-audit --verbose"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "jose": "^5.9.6",
+    "dotenv": "^17.4.2",
+    "jose": "^6.2.3",
     "js-yaml": "^5.1.0",
-    "lucide-react": "^0.546.0",
-    "motion": "^12.23.24",
+    "lucide-react": "^1.21.0",
+    "motion": "^12.42.0",
     "next": "^16.2.9",
-    "openid-client": "^5.6.5",
+    "openid-client": "^6.8.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "recharts": "^3.9.0"
@@ -29,11 +31,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.1",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.1",
     "@types/react": "19.2.17",
-    "concurrently": "^9.2.1",
-    "esbuild": "^0.25.0",
-    "tailwindcss": "^4.1.14",
-    "typescript": "~5.8.2"
+    "concurrently": "^10.0.3",
+    "esbuild": "^0.28.1",
+    "npm-check-updates": "^22.2.7",
+    "tailwindcss": "^4.3.1",
+    "typescript": "~6.0.3"
   }
 }
