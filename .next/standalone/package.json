@@ -1,0 +1,36 @@
+{
+  "name": "helm-pilot",
+  "description": "A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system.",
+  "private": true,
+  "version": "0.2.0",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "build:prod": "next build",
+    "start:dev": "next dev --port 3000",
+    "start:prod": "next start --port 3000",
+    "type:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "jose": "^5.9.6",
+    "js-yaml": "^5.1.0",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "next": "^16.2.9",
+    "openid-client": "^5.6.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.9.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.14.0",
+    "@types/react": "19.2.17",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.8.2"
+  }
+}
