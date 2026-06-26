@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
 import * as yaml from 'js-yaml';
-import { getK8sConfig, callK8sApi } from '@/lib/k8s';
+import { NextRequest, NextResponse } from 'next/server';
+
 import { parseHelmSecret } from '@/lib/helm';
-import { getRepos } from '@/lib/repos';
+import { callK8sApi, getK8sConfig } from '@/lib/k8s';
 import { logger } from '@/lib/logger';
+import { getRepos } from '@/lib/repos';
 
 const knownRepos = [
   { name: 'bitnami', url: 'https://charts.bitnami.com/bitnami' },
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
   try {
     const secretList = await callK8sApi(config, '/api/v1/secrets?labelSelector=owner%3Dhelm');
     const chartNames = new Set<string>();
-    for (const item of (secretList.items || [])) {
+    for (const item of secretList.items || []) {
       if (!item.data?.release) continue;
       try {
         const decoded = await parseHelmSecret(item.data.release);
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
     const added: string[] = [];
 
     for (const repo of knownRepos) {
-      if (repos.some(r => r.url === repo.url)) continue;
+      if (repos.some((r) => r.url === repo.url)) continue;
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 3000);
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
         clearTimeout(timeout);
         if (!resp.ok) continue;
         const index = yaml.load(await resp.text()) as any;
-        if (index?.entries && Array.from(chartNames).some(n => index.entries[n])) {
+        if (index?.entries && Array.from(chartNames).some((n) => index.entries[n])) {
           repos.push(repo);
           added.push(repo.name);
         }

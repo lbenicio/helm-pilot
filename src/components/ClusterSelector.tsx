@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { Check, Plus, RefreshCw, Server, ShieldAlert, Trash2, Wifi, WifiOff, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+
 import { K8sCluster } from '@/types/k8s-cluster.type';
-import { Server, Plus, Trash2, Check, X, ShieldAlert, Wifi, WifiOff, RefreshCw } from 'lucide-react';
 
 interface ClusterSelectorProps {
   clusters: K8sCluster[];
@@ -10,16 +11,10 @@ interface ClusterSelectorProps {
   onRemoveCluster: (id: string) => void;
 }
 
-export default function ClusterSelector({
-  clusters,
-  activeCluster,
-  onSelectCluster,
-  onAddCluster,
-  onRemoveCluster,
-}: ClusterSelectorProps) {
+export default function ClusterSelector({ clusters, activeCluster, onSelectCluster, onAddCluster, onRemoveCluster }: ClusterSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  
+
   // Form fields
   const [name, setName] = useState('');
   const [apiUrl, setApiUrl] = useState('');
@@ -62,7 +57,7 @@ export default function ClusterSelector({
 
       const data = await response.json();
       const endTime = Date.now();
-      const calculatedLatency = data.latencyMs || (endTime - startTime);
+      const calculatedLatency = data.latencyMs || endTime - startTime;
 
       if (data.success) {
         setLatency(calculatedLatency);
@@ -137,7 +132,7 @@ export default function ClusterSelector({
 
     onAddCluster(newCluster);
     onSelectCluster(newCluster);
-    
+
     // Reset form
     setName('');
     setApiUrl('');
@@ -155,21 +150,25 @@ export default function ClusterSelector({
         className="flex items-center gap-2.5 px-4 py-2 rounded-xl border text-sm font-medium transition cursor-pointer active:scale-95 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/40"
       >
         <Server className="w-4 h-4 shrink-0" />
-        <span className="max-w-37.5 truncate">
-          {activeCluster?.name || 'Cluster'}
-        </span>
-        <div 
+        <span className="max-w-37.5 truncate">{activeCluster?.name || 'Cluster'}</span>
+        <div
           className={`w-2 h-2 rounded-full transition-all duration-300 animate-pulse ${
-            pingStatus === 'healthy' ? 'bg-emerald-500 shadow-[0_0_8px_#10B981]' :
-            pingStatus === 'degraded' ? 'bg-amber-500 shadow-[0_0_8px_#F59E0B]' :
-            pingStatus === 'offline' ? 'bg-rose-500 shadow-[0_0_8px_#F43F5E]' :
-            'bg-slate-400 dark:bg-slate-500'
-          }`} 
+            pingStatus === 'healthy'
+              ? 'bg-emerald-500 shadow-[0_0_8px_#10B981]'
+              : pingStatus === 'degraded'
+                ? 'bg-amber-500 shadow-[0_0_8px_#F59E0B]'
+                : pingStatus === 'offline'
+                  ? 'bg-rose-500 shadow-[0_0_8px_#F43F5E]'
+                  : 'bg-slate-400 dark:bg-slate-500'
+          }`}
           title={
-            pingStatus === 'healthy' ? `Healthy (${latency}ms)` :
-            pingStatus === 'degraded' ? `Degraded Latency (${latency}ms)` :
-            pingStatus === 'offline' ? 'Offline / Unreachable' :
-            'Checking connectivity...'
+            pingStatus === 'healthy'
+              ? `Healthy (${latency}ms)`
+              : pingStatus === 'degraded'
+                ? `Degraded Latency (${latency}ms)`
+                : pingStatus === 'offline'
+                  ? 'Offline / Unreachable'
+                  : 'Checking connectivity...'
           }
         />
       </button>
@@ -178,9 +177,7 @@ export default function ClusterSelector({
       {isOpen && (
         <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl shadow-lg z-50 p-4 text-[#1A1A1A] dark:text-slate-100">
           <div className="flex items-center justify-between border-b border-[#E1E4E8] dark:border-slate-700 pb-2.5 mb-3">
-            <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Clusters & Profiles
-            </h3>
+            <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Clusters & Profiles</h3>
             <button
               onClick={() => {
                 setShowAddForm(!showAddForm);
@@ -226,7 +223,9 @@ export default function ClusterSelector({
                   }`}
                 >
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className={`p-1.5 rounded-lg ${activeCluster?.id === cluster.id ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}>
+                    <div
+                      className={`p-1.5 rounded-lg ${activeCluster?.id === cluster.id ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}`}
+                    >
                       <Server className="w-4 h-4" />
                     </div>
                     <div className="overflow-hidden">
@@ -251,7 +250,9 @@ export default function ClusterSelector({
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3 pt-1">
               <div>
-                <label className="block text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mb-1">Cluster Nickname</label>
+                <label className="block text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mb-1">
+                  Cluster Nickname
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Production GKE"
@@ -280,11 +281,13 @@ export default function ClusterSelector({
               </div>
 
               {testResult && (
-                <div className={`p-2.5 rounded-lg text-[10px] border leading-relaxed ${
-                  testResult.success 
-                    ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-400' 
-                    : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/30 text-rose-800 dark:text-rose-400'
-                }`}>
+                <div
+                  className={`p-2.5 rounded-lg text-[10px] border leading-relaxed ${
+                    testResult.success
+                      ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-400'
+                      : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/30 text-rose-800 dark:text-rose-400'
+                  }`}
+                >
                   {testResult.message}
                 </div>
               )}
@@ -296,11 +299,7 @@ export default function ClusterSelector({
                   disabled={testing}
                   className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 text-xs text-slate-700 dark:text-slate-200 font-medium rounded-lg flex items-center gap-1 transition cursor-pointer"
                 >
-                  {testing ? (
-                    <RefreshCw className="w-3 h-3 animate-spin" />
-                  ) : (
-                    <Wifi className="w-3 h-3" />
-                  )}
+                  {testing ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Wifi className="w-3 h-3" />}
                   Test Connection
                 </button>
                 <button
@@ -327,25 +326,33 @@ export default function ClusterSelector({
           <div className="mt-4 pt-3.5 border-t border-[#E1E4E8] dark:border-slate-800 flex items-center justify-between text-[10px]">
             <div className="flex items-center gap-2">
               <span className="text-slate-400 font-medium dark:text-slate-500">API Status:</span>
-              <span className={`inline-flex items-center gap-1.5 font-bold uppercase ${
-                pingStatus === 'healthy' ? 'text-emerald-600 dark:text-emerald-400' :
-                pingStatus === 'degraded' ? 'text-amber-600 dark:text-amber-400' :
-                pingStatus === 'offline' ? 'text-rose-600 dark:text-rose-400' :
-                'text-slate-400 dark:text-slate-500'
-              }`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${
-                  pingStatus === 'healthy' ? 'bg-emerald-500' :
-                  pingStatus === 'degraded' ? 'bg-amber-500' :
-                  pingStatus === 'offline' ? 'bg-rose-500' :
-                  'bg-slate-400'
-                } animate-pulse`} />
+              <span
+                className={`inline-flex items-center gap-1.5 font-bold uppercase ${
+                  pingStatus === 'healthy'
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : pingStatus === 'degraded'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : pingStatus === 'offline'
+                        ? 'text-rose-600 dark:text-rose-400'
+                        : 'text-slate-400 dark:text-slate-500'
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    pingStatus === 'healthy'
+                      ? 'bg-emerald-500'
+                      : pingStatus === 'degraded'
+                        ? 'bg-amber-500'
+                        : pingStatus === 'offline'
+                          ? 'bg-rose-500'
+                          : 'bg-slate-400'
+                  } animate-pulse`}
+                />
                 {pingStatus === 'checking' ? 'Checking...' : pingStatus}
               </span>
             </div>
             <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-mono text-[9px]">
-              {latency !== null && (
-                <span>{latency}ms</span>
-              )}
+              {latency !== null && <span>{latency}ms</span>}
               {lastChecked && (
                 <span className="opacity-80">
                   Refreshed: {lastChecked.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}

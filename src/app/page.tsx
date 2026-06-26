@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useApp } from '@/contexts/AppContext';
+
 import Dashboard from '@/components/Dashboard';
+import { useApp } from '@/contexts/AppContext';
 
 export default function DashboardPage() {
   const { activeCluster, globalSearchQuery, setGlobalSearchQuery, selectedNamespace, setSelectedNamespace } = useApp();

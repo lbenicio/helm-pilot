@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Cpu, HardDrive, Layers, Radio, Shield, RefreshCw, AlertCircle, Info, HelpCircle } from 'lucide-react';
+import { AlertCircle, Cpu, HardDrive, HelpCircle, Info, Layers, Radio, RefreshCw, Shield } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import React, { useEffect, useState } from 'react';
+
 import { K8sCluster } from '@/types/k8s-cluster.type';
 
 interface QuotaItem {
@@ -94,7 +95,7 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
   };
 
   const getIconForResource = (resource: string) => {
-    const css = "w-4 h-4 shrink-0";
+    const css = 'w-4 h-4 shrink-0';
     if (resource.includes('cpu')) return <Cpu className={`${css} text-indigo-500`} />;
     if (resource.includes('memory')) return <HardDrive className={`${css} text-blue-500`} />;
     if (resource === 'pods') return <Layers className={`${css} text-violet-500`} />;
@@ -119,8 +120,8 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
   };
 
   return (
-    <div 
-      id="namespace-quota-widget-container" 
+    <div
+      id="namespace-quota-widget-container"
       className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-800 rounded-xl p-5 shadow-sm transition-colors duration-200"
     >
       <div className="flex items-center justify-between mb-4.5">
@@ -129,11 +130,10 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-              Namespace Quota Limits
-            </h3>
+            <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Namespace Quota Limits</h3>
             <p className="text-[10px] text-slate-400">
-              Active boundaries for: <span className="font-semibold text-slate-600 dark:text-slate-300 capitalize">{namespace || 'all namespaces'}</span>
+              Active boundaries for:{' '}
+              <span className="font-semibold text-slate-600 dark:text-slate-300 capitalize">{namespace || 'all namespaces'}</span>
             </p>
           </div>
         </div>
@@ -151,13 +151,7 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
 
       <AnimatePresence mode="wait">
         {loading && !isRefreshing ? (
-          <motion.div 
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-3.5 py-2"
-          >
+          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3.5 py-2">
             {[1, 2, 3].map((i) => (
               <div key={i} className="space-y-1.5 animate-pulse">
                 <div className="flex justify-between">
@@ -169,7 +163,7 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
             ))}
           </motion.div>
         ) : error ? (
-          <motion.div 
+          <motion.div
             key="error"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -189,29 +183,19 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
             </div>
           </motion.div>
         ) : (
-          <motion.div 
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-3.5"
-          >
+          <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
               {quotas.map((quota) => (
                 <div key={quota.resource} className="space-y-1.5 group">
                   <div className="flex items-center justify-between text-[11px]">
                     <div className="flex items-center gap-1.5">
                       {getIconForResource(quota.resource)}
-                      <span className="font-semibold text-slate-700 dark:text-slate-200">
-                        {quota.name}
-                      </span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-200">{quota.name}</span>
                     </div>
                     <span className="font-mono text-slate-500 dark:text-slate-400 text-[10px]">
                       {formatValue(quota.used, quota.resource)}
                       <span className="text-slate-300 dark:text-slate-600 mx-1">/</span>
-                      <span className="font-semibold text-slate-700 dark:text-slate-200">
-                        {formatValue(quota.limit, quota.resource)}
-                      </span>
+                      <span className="font-semibold text-slate-700 dark:text-slate-200">{formatValue(quota.limit, quota.resource)}</span>
                     </span>
                   </div>
 
@@ -226,12 +210,8 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
                   </div>
 
                   <div className="flex items-center justify-between text-[9px]">
-                    <span className="text-slate-400 font-mono">
-                      {quota.resource}
-                    </span>
-                    <span className={`font-mono font-bold ${getTextColorClass(quota.percentage)}`}>
-                      {quota.percentage}% used
-                    </span>
+                    <span className="text-slate-400 font-mono">{quota.resource}</span>
+                    <span className={`font-mono font-bold ${getTextColorClass(quota.percentage)}`}>{quota.percentage}% used</span>
                   </div>
                 </div>
               ))}
@@ -241,7 +221,9 @@ export default function NamespaceQuotaWidget({ namespace, activeCluster }: Names
             <div className="mt-1 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-start gap-1.5 text-[9px] text-slate-400">
               <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0 mt-0.5" />
               <p className="leading-normal">
-                Quotas set CPU, memory, and controller capacities allowed in the <span className="font-semibold text-slate-600 dark:text-slate-300 capitalize">"{namespace || 'all'}"</span> namespace context. Green means well within limits, turning to orange as resources get tight.
+                Quotas set CPU, memory, and controller capacities allowed in the{' '}
+                <span className="font-semibold text-slate-600 dark:text-slate-300 capitalize">"{namespace || 'all'}"</span> namespace
+                context. Green means well within limits, turning to orange as resources get tight.
               </p>
             </div>
           </motion.div>

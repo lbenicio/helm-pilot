@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useApp } from '@/contexts/AppContext';
-import { Activity, Server, Database, Wifi, RefreshCw, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { Activity, AlertTriangle, CheckCircle2, Database, RefreshCw, Server, Wifi, XCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
+
+import { useApp } from '@/contexts/AppContext';
 
 interface HealthData {
   success: boolean;
@@ -54,21 +55,27 @@ export default function HealthPage() {
     }
   };
 
-  useEffect(() => { fetchHealth(); }, [activeCluster]);
+  useEffect(() => {
+    fetchHealth();
+  }, [activeCluster]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <Activity className="w-4 h-4 text-blue-600" />Cluster Health & Diagnostics
+            <Activity className="w-4 h-4 text-blue-600" />
+            Cluster Health & Diagnostics
           </h2>
           <p className="text-[10px] text-slate-400 mt-0.5">
             {data ? `Last polled: ${new Date(data.polledAt).toLocaleTimeString()}` : 'Loading...'}
           </p>
         </div>
-        <button onClick={fetchHealth} disabled={loading}
-          className="p-1.5 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer">
+        <button
+          onClick={fetchHealth}
+          disabled={loading}
+          className="p-1.5 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer"
+        >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
@@ -77,11 +84,18 @@ export default function HealthPage() {
         <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/30 rounded-xl p-6 text-center">
           <AlertTriangle className="w-6 h-6 text-rose-400 mx-auto mb-2" />
           <p className="text-xs text-rose-600 dark:text-rose-400">{error}</p>
-          <button onClick={fetchHealth} className="mt-2 px-3 py-1.5 bg-rose-100 dark:bg-rose-900/30 text-xs font-semibold text-rose-700 dark:text-rose-300 rounded-lg">Retry</button>
+          <button
+            onClick={fetchHealth}
+            className="mt-2 px-3 py-1.5 bg-rose-100 dark:bg-rose-900/30 text-xs font-semibold text-rose-700 dark:text-rose-300 rounded-lg"
+          >
+            Retry
+          </button>
         </div>
       ) : loading && !data ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-pulse">
-          {[1,2,3].map(i => <div key={i} className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-5 h-48" />)}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl p-5 h-48" />
+          ))}
         </div>
       ) : data ? (
         <>
@@ -92,10 +106,15 @@ export default function HealthPage() {
                 <Server className="w-4 h-4 text-blue-500" />
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nodes</span>
               </div>
-              <div className="text-2xl font-bold text-slate-800 dark:text-white">{data.nodes.ready}/{data.nodes.total}</div>
+              <div className="text-2xl font-bold text-slate-800 dark:text-white">
+                {data.nodes.ready}/{data.nodes.total}
+              </div>
               <div className="text-[10px] text-slate-400 mt-1">Ready / Total</div>
               <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
-                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${(data.nodes.ready / Math.max(data.nodes.total, 1)) * 100}%` }} />
+                <div
+                  className="bg-emerald-500 h-full rounded-full"
+                  style={{ width: `${(data.nodes.ready / Math.max(data.nodes.total, 1)) * 100}%` }}
+                />
               </div>
             </div>
 
@@ -104,7 +123,10 @@ export default function HealthPage() {
                 <Wifi className="w-4 h-4 text-amber-500" />
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">API Latency</span>
               </div>
-              <div className="text-2xl font-bold font-mono text-slate-800 dark:text-white">{data.latencyMs}<span className="text-xs text-slate-400 ml-1">ms</span></div>
+              <div className="text-2xl font-bold font-mono text-slate-800 dark:text-white">
+                {data.latencyMs}
+                <span className="text-xs text-slate-400 ml-1">ms</span>
+              </div>
               <div className="text-[10px] text-slate-400 mt-1">Response time</div>
             </div>
 
@@ -115,12 +137,22 @@ export default function HealthPage() {
               </div>
               <div className="space-y-2 mt-2">
                 <div>
-                  <div className="flex justify-between text-[10px] text-slate-500 mb-1"><span>CPU</span><span>{data.nodes.cpuUsagePercent}%</span></div>
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden"><div className="bg-blue-500 h-full rounded-full" style={{ width: `${data.nodes.cpuUsagePercent}%` }} /></div>
+                  <div className="flex justify-between text-[10px] text-slate-500 mb-1">
+                    <span>CPU</span>
+                    <span>{data.nodes.cpuUsagePercent}%</span>
+                  </div>
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden">
+                    <div className="bg-blue-500 h-full rounded-full" style={{ width: `${data.nodes.cpuUsagePercent}%` }} />
+                  </div>
                 </div>
                 <div>
-                  <div className="flex justify-between text-[10px] text-slate-500 mb-1"><span>Memory</span><span>{data.nodes.memoryUsagePercent}%</span></div>
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden"><div className="bg-purple-500 h-full rounded-full" style={{ width: `${data.nodes.memoryUsagePercent}%` }} /></div>
+                  <div className="flex justify-between text-[10px] text-slate-500 mb-1">
+                    <span>Memory</span>
+                    <span>{data.nodes.memoryUsagePercent}%</span>
+                  </div>
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full overflow-hidden">
+                    <div className="bg-purple-500 h-full rounded-full" style={{ width: `${data.nodes.memoryUsagePercent}%` }} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -143,13 +175,25 @@ export default function HealthPage() {
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
                 {data.nodes.list.map((node, i) => (
-                  <motion.tr key={node.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                  <motion.tr
+                    key={node.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/30"
+                  >
                     <td className="px-4 py-2.5 font-mono text-slate-700 dark:text-slate-300">{node.name}</td>
                     <td className="px-4 py-2.5">
-                      <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                        node.status === 'Ready' ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'
-                      }`}>{node.status === 'Ready' ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}{node.status}</span>
+                      <span
+                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                          node.status === 'Ready'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400'
+                            : 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'
+                        }`}
+                      >
+                        {node.status === 'Ready' ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+                        {node.status}
+                      </span>
                     </td>
                     <td className="px-4 py-2.5 text-slate-500">{node.role}</td>
                     <td className="px-4 py-2.5 text-slate-500">{node.cpu}</td>
@@ -166,12 +210,21 @@ export default function HealthPage() {
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Control Plane Components</span>
             </div>
             <div className="grid grid-cols-3 divide-x divide-slate-100 dark:divide-slate-800">
-              {(['controllerManager', 'scheduler', 'etcd'] as const).map(comp => (
+              {(['controllerManager', 'scheduler', 'etcd'] as const).map((comp) => (
                 <div key={comp} className="p-4 text-center">
-                  <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5">{comp === 'controllerManager' ? 'Controller' : comp === 'scheduler' ? 'Scheduler' : 'etcd'}</div>
-                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold ${
-                    data.components[comp] === 'Healthy' ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'
-                  }`}>{data.components[comp] === 'Healthy' ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}{data.components[comp]}</span>
+                  <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5">
+                    {comp === 'controllerManager' ? 'Controller' : comp === 'scheduler' ? 'Scheduler' : 'etcd'}
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold ${
+                      data.components[comp] === 'Healthy'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400'
+                        : 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'
+                    }`}
+                  >
+                    {data.components[comp] === 'Healthy' ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+                    {data.components[comp]}
+                  </span>
                 </div>
               ))}
             </div>

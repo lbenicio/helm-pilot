@@ -1,21 +1,22 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { K8sCluster } from '@/types/k8s-cluster.type';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Activity, 
-  Server, 
-  Cpu, 
-  RefreshCw, 
-  AlertCircle, 
-  CheckCircle2, 
-  Wifi, 
-  Clock, 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Cpu,
   Database,
+  Heart,
   Layers,
-  Heart
+  RefreshCw,
+  Server,
+  Wifi,
 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import { K8sCluster } from '@/types/k8s-cluster.type';
 
 interface ClusterHealthWidgetProps {
   activeCluster: K8sCluster | null;
@@ -117,7 +118,8 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
 
   // Color logic for latency status
   const getLatencyColor = (ms: number) => {
-    if (ms < 50) return 'text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/30';
+    if (ms < 50)
+      return 'text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/30';
     if (ms < 150) return 'text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/30';
     return 'text-rose-500 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/30';
   };
@@ -145,12 +147,7 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
         <div className="flex items-center gap-2.5 self-end sm:self-auto">
           {/* Auto refresh switch */}
           <label className="inline-flex items-center gap-1.5 cursor-pointer select-none">
-            <input 
-              type="checkbox" 
-              checked={autoRefresh}
-              onChange={() => setAutoRefresh(!autoRefresh)}
-              className="sr-only peer"
-            />
+            <input type="checkbox" checked={autoRefresh} onChange={() => setAutoRefresh(!autoRefresh)} className="sr-only peer" />
             <div className="relative w-7 h-4 bg-slate-200 peer-focus:outline-none dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:inset-s-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
             <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               {autoRefresh ? 'Live Polling' : 'Manual'}
@@ -217,16 +214,16 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
                     </span>
                     <span className="text-[10px] text-slate-500">Nodes Ready</span>
                   </div>
-                  
+
                   <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="bg-emerald-500 h-full" 
+                    <motion.div
+                      className="bg-emerald-500 h-full"
                       initial={{ width: 0 }}
                       animate={{ width: `${((healthData?.nodes.ready || 1) / (healthData?.nodes.total || 1)) * 100}%` }}
                       transition={{ duration: 1, ease: 'easeOut' }}
                     />
                   </div>
-                  
+
                   {healthData?.nodes.notReady && healthData.nodes.notReady > 0 ? (
                     <div className="text-[9px] font-bold text-rose-500 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" />
@@ -248,7 +245,9 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
                   <Wifi className="w-3.5 h-3.5 text-slate-500" />
                   API Server Response
                 </span>
-                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold border ${getLatencyColor(healthData?.latencyMs || 0)}`}>
+                <span
+                  className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold border ${getLatencyColor(healthData?.latencyMs || 0)}`}
+                >
                   Latency
                 </span>
               </div>
@@ -279,14 +278,14 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
                   <div className="flex gap-0.5 items-end h-3 pt-1">
                     {/* Tiny animated bars just for aesthetic response weight */}
                     {[12, 18, 14, 25, 30, 15, 20, 24, 28, 12, 15, 19, (healthData?.latencyMs || 20) / 2].map((h, i) => (
-                      <motion.div 
-                        key={i} 
+                      <motion.div
+                        key={i}
                         initial={{ height: 2 }}
                         animate={{ height: `${Math.min(h, 12)}px` }}
                         transition={{ type: 'spring', damping: 10, stiffness: 180, delay: i * 0.015 }}
                         className={`w-1 rounded-t-sm transition-all duration-350 ${
                           (healthData?.latencyMs || 0) > 150 ? 'bg-rose-400' : 'bg-blue-400 dark:bg-blue-500'
-                        }`} 
+                        }`}
                       />
                     ))}
                   </div>
@@ -304,7 +303,10 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
               {loading && !healthData ? (
                 <div className="grid grid-cols-3 gap-1.5 animate-pulse py-1">
                   {Array.from({ length: 3 }).map((_, idx) => (
-                    <div key={idx} className="bg-white dark:bg-slate-900/80 p-2 border border-slate-200/40 dark:border-slate-800/50 rounded-lg text-center space-y-2 h-14 flex flex-col justify-between">
+                    <div
+                      key={idx}
+                      className="bg-white dark:bg-slate-900/80 p-2 border border-slate-200/40 dark:border-slate-800/50 rounded-lg text-center space-y-2 h-14 flex flex-col justify-between"
+                    >
                       <div className="h-2.5 w-10 bg-slate-100 dark:bg-slate-800 mx-auto rounded" />
                       <div className="h-4.5 w-14 bg-slate-200 dark:bg-slate-850 mx-auto rounded-full" />
                     </div>
@@ -314,33 +316,39 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
                 <div className="grid grid-cols-3 gap-1.5">
                   <div className="bg-white dark:bg-slate-900/80 p-2 border border-slate-200/40 dark:border-slate-800/50 rounded-lg text-center space-y-1">
                     <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">Controller</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                      healthData?.components.controllerManager === 'Healthy'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
-                        : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
-                    }`}>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        healthData?.components.controllerManager === 'Healthy'
+                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
+                          : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
+                      }`}
+                    >
                       {healthData?.components.controllerManager}
                     </span>
                   </div>
 
                   <div className="bg-white dark:bg-slate-900/80 p-2 border border-slate-200/40 dark:border-slate-800/50 rounded-lg text-center space-y-1">
                     <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">Scheduler</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                      healthData?.components.scheduler === 'Healthy'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
-                        : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
-                    }`}>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        healthData?.components.scheduler === 'Healthy'
+                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
+                          : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
+                      }`}
+                    >
                       {healthData?.components.scheduler}
                     </span>
                   </div>
 
                   <div className="bg-white dark:bg-slate-900/80 p-2 border border-slate-200/40 dark:border-slate-800/50 rounded-lg text-center space-y-1">
                     <span className="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">etcd database</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                      healthData?.components.etcd === 'Healthy'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
-                        : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
-                    }`}>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        healthData?.components.etcd === 'Healthy'
+                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
+                          : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
+                      }`}
+                    >
                       {healthData?.components.etcd}
                     </span>
                   </div>
@@ -367,7 +375,7 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
 
             <AnimatePresence initial={false}>
               {isExpanded && (
-                <motion.div 
+                <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
@@ -398,11 +406,13 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
                               <td className="py-2 px-3">{node.cpu}</td>
                               <td className="py-2 px-3">{node.memory}</td>
                               <td className="py-2 px-3 text-right">
-                                <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-                                  node.status === 'Ready'
-                                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
-                                    : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
-                                }`}>
+                                <span
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
+                                    node.status === 'Ready'
+                                      ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400'
+                                      : 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400'
+                                  }`}
+                                >
                                   <span className={`w-1 h-1 rounded-full ${node.status === 'Ready' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                                   {node.status}
                                 </span>

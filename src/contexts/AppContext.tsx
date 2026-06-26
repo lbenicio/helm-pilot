@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+
 import { K8sCluster } from '@/types/k8s-cluster.type';
 import { UserSession } from '@/types/user-session.type';
 
@@ -36,8 +37,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('helm_manager_theme') === 'dark' ||
-        (!('helm_manager_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return (
+        localStorage.getItem('helm_manager_theme') === 'dark' ||
+        (!('helm_manager_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      );
     }
     return false;
   });
@@ -75,7 +78,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleAddCluster = useCallback((cluster: K8sCluster) => {
-    setClusters(prev => {
+    setClusters((prev) => {
       const updated = [...prev, cluster];
       localStorage.setItem('helm_manager_clusters', JSON.stringify(updated));
       return updated;
@@ -83,12 +86,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const handleRemoveCluster = useCallback((id: string) => {
-    setClusters(prev => {
-      const updated = prev.filter(c => c.id !== id);
+    setClusters((prev) => {
+      const updated = prev.filter((c) => c.id !== id);
       localStorage.setItem('helm_manager_clusters', JSON.stringify(updated));
       return updated;
     });
-    setActiveCluster(prev => prev?.id === id ? null : prev);
+    setActiveCluster((prev) => (prev?.id === id ? null : prev));
     localStorage.removeItem('helm_manager_active_cluster_id');
   }, []);
 
@@ -116,7 +119,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const activeSaved = localStorage.getItem('helm_manager_active_cluster_id');
         if (activeSaved) {
           const found = parsed.find((c: K8sCluster) => c.id === activeSaved);
-          if (found) { setActiveCluster(found); hasActiveCluster = true; }
+          if (found) {
+            setActiveCluster(found);
+            hasActiveCluster = true;
+          }
         }
       } catch (e) {
         console.error('Error loading saved clusters:', e);
@@ -125,7 +131,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     if (!hasActiveCluster && !hasSavedClusters) {
       fetch('/api/k8s/default-cluster')
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((defaultCluster: K8sCluster | null) => {
           if (defaultCluster) setActiveCluster(defaultCluster);
         })
@@ -134,14 +140,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{
-      session, loadingSession, checkSession, handleLogout,
-      clusters, activeCluster, setActiveCluster,
-      handleAddCluster, handleRemoveCluster, handleSelectCluster,
-      isDarkMode, setIsDarkMode,
-      globalSearchQuery, setGlobalSearchQuery,
-      selectedNamespace, setSelectedNamespace,
-    }}>
+    <AppContext.Provider
+      value={{
+        session,
+        loadingSession,
+        checkSession,
+        handleLogout,
+        clusters,
+        activeCluster,
+        setActiveCluster,
+        handleAddCluster,
+        handleRemoveCluster,
+        handleSelectCluster,
+        isDarkMode,
+        setIsDarkMode,
+        globalSearchQuery,
+        setGlobalSearchQuery,
+        selectedNamespace,
+        setSelectedNamespace,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

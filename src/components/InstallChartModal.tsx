@@ -1,7 +1,8 @@
+import { AlertCircle, CheckCircle2, FileText, Play, RefreshCw, X } from 'lucide-react';
 import React, { useState } from 'react';
+
 import { HelmChart } from '@/types/helm-chart.type';
 import { K8sCluster } from '@/types/k8s-cluster.type';
-import { X, Play, RefreshCw, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
 
 interface InstallChartModalProps {
   chart: HelmChart;
@@ -10,17 +11,12 @@ interface InstallChartModalProps {
   onSuccess: () => void;
 }
 
-export default function InstallChartModal({
-  chart,
-  activeCluster,
-  onClose,
-  onSuccess,
-}: InstallChartModalProps) {
+export default function InstallChartModal({ chart, activeCluster, onClose, onSuccess }: InstallChartModalProps) {
   const [releaseName, setReleaseName] = useState(chart.name);
   const [namespace, setNamespace] = useState('default');
   const [version, setVersion] = useState(chart.version);
   const [valuesYaml, setValuesYaml] = useState(chart.defaultValues || 'replicaCount: 1');
-  
+
   const [deploying, setDeploying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -79,7 +75,6 @@ export default function InstallChartModal({
   return (
     <div className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 font-sans select-none">
       <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-xl animate-in fade-in zoom-in-95 duration-150 text-[#1A1A1A] dark:text-slate-100">
-        
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#E1E4E8] dark:border-slate-700 p-5 bg-slate-50 dark:bg-slate-800">
           <div className="flex items-center gap-3">
@@ -87,9 +82,7 @@ export default function InstallChartModal({
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-base">
-                Deploy Chart: {chart.name}
-              </h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-base">Deploy Chart: {chart.name}</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Installs a new Helm release in {activeCluster ? activeCluster.name : 'the active cluster'}
               </p>
@@ -106,7 +99,6 @@ export default function InstallChartModal({
         <form onSubmit={handleDeploy} className="flex-1 overflow-hidden flex flex-col">
           {/* Modal Content - Split View */}
           <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
             {/* Left Column: Form Settings */}
             <div className="lg:col-span-4 space-y-4">
               <div>
@@ -153,7 +145,8 @@ export default function InstallChartModal({
               <div className="bg-slate-50 dark:bg-slate-800 p-4 border border-[#E1E4E8] dark:border-slate-700 rounded-lg space-y-2">
                 <h4 className="text-[10px] font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Deployment Scope</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
-                  Helm release state secrets will be written to the cluster namespace. Ensure your Service Account token has secret write permissions.
+                  Helm release state secrets will be written to the cluster namespace. Ensure your Service Account token has secret write
+                  permissions.
                 </p>
               </div>
             </div>

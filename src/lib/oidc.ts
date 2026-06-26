@@ -1,27 +1,43 @@
-import { Issuer, generators, BaseClient } from 'openid-client';
+import * as oidc from 'openid-client';
+
 import { logger } from './logger';
 
-// Apply TLS bypass if configured (for self-signed OIDC providers)
 if (process.env.OIDC_SKIP_TLS_VERIFY === 'true') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   logger.info('OIDC TLS verification bypassed');
 }
 
-let cachedIssuer: Issuer<BaseClient> | null = null;
+let cachedConfig: oidc.Configuration | null = null;
 
-export async function getOidcClient(redirectUri: string) {
+async function getConfig() {
+  if (cachedConfig) return cachedConfig;
   const issuerUrl = process.env.OIDC_ISSUER_URL!;
-  if (!cachedIssuer) {
-    cachedIssuer = await Issuer.discover(issuerUrl);
-  }
-  return new cachedIssuer.Client({
-    client_id: process.env.OIDC_CLIENT_ID!,
-    client_secret: process.env.OIDC_CLIENT_SECRET!,
-    redirect_uris: [redirectUri],
-    response_types: ['code'],
-  });
+  cachedConfig = await oidc.discovery(new URL(issuerUrl), process.env.OIDC_CLIENT_ID!, process.env.OIDC_CLIENT_SECRET);
+  return cachedConfig;
 }
 
 export function generateState() {
-  return generators.state();
+  return oidc.randomState();
+}
+
+export async function getAuthorizationUrl(redirectUri: string, scope: string, state: string) {
+  const config = await getConfig();
+  return oidc.buildAuthorizationUrl(config, {
+    redirect_uri: redirectUri,
+    scope,
+    state,
+  });
+}
+
+export async function handleCallback(redirectUri: string, params: Record<string, string>, expectedState?: string) {
+  const config = await getConfig();
+  const tokenSet = await oidc.authorizationCodeGrant(config, new URL(`${redirectUri}?${new URLSearchParams(params)}`), {
+    expectedState,
+  });
+  return tokenSet;
+}
+
+export async function fetchUserInfo(accessToken: string) {
+  const config = await getConfig();
+  return oidc.fetchUserInfo(config, accessToken, undefined);
 }

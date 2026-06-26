@@ -1,26 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  ResponsiveContainer, 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend,
-  ReferenceLine
-} from 'recharts';
-import { 
-  Cpu, 
-  Database, 
-  RefreshCw, 
-  Activity, 
-  TrendingUp, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Sliders, 
-  Maximize2 
-} from 'lucide-react';
+import { Activity, AlertTriangle, CheckCircle2, Cpu, Database, Maximize2, RefreshCw, Sliders, TrendingUp } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Area, AreaChart, CartesianGrid, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+
 import { K8sCluster } from '@/types/k8s-cluster.type';
 
 interface MetricPoint {
@@ -133,7 +114,7 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
     cpuLimit: 0,
     memUsage: 0,
     memRequest: 0,
-    memLimit: 0
+    memLimit: 0,
   };
 
   // Alert heuristics
@@ -168,7 +149,6 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 rounded-xl overflow-hidden shadow-sm flex flex-col mt-6">
-      
       {/* Chart Panel Header */}
       <div className="p-4 border-b border-[#E1E4E8] dark:border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/50">
         <div className="flex items-center gap-2.5">
@@ -181,8 +161,8 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
               {getStatusTextAndBadge()}
             </div>
             <p className="text-[10px] text-slate-400 dark:text-slate-500">
-              {podsFound 
-                ? 'Aggregated from active Kubernetes Pod containers spec & request bounds' 
+              {podsFound
+                ? 'Aggregated from active Kubernetes Pod containers spec & request bounds'
                 : 'Projected release consumption baseline (No active pods discovered)'}
             </p>
           </div>
@@ -195,8 +175,8 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
             <button
               onClick={() => setActiveTab('cpu')}
               className={`px-3 py-1 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer ${
-                activeTab === 'cpu' 
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm' 
+                activeTab === 'cpu'
+                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
@@ -206,8 +186,8 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
             <button
               onClick={() => setActiveTab('memory')}
               className={`px-3 py-1 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer ${
-                activeTab === 'memory' 
-                  ? 'bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm' 
+                activeTab === 'memory'
+                  ? 'bg-white dark:bg-slate-900 text-violet-600 dark:text-violet-400 shadow-sm'
                   : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
@@ -243,8 +223,8 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`p-1.5 rounded-lg border transition cursor-pointer flex items-center gap-1.5 text-[10px] font-semibold ${
-              autoRefresh 
-                ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/30 text-blue-600 dark:text-blue-400' 
+              autoRefresh
+                ? 'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/30 text-blue-600 dark:text-blue-400'
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-400'
             }`}
             title={autoRefresh ? 'Pause streaming telemetry' : 'Resume streaming telemetry'}
@@ -265,18 +245,23 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
 
       {/* Metrics Readout Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#E1E4E8] dark:divide-slate-700/80 border-b border-[#E1E4E8] dark:border-slate-700 bg-white dark:bg-slate-900">
-        
         {/* Actual consumption card */}
         <div className={`p-4 flex flex-col justify-between transition-colors ${currentAlert ? 'bg-rose-50/50 dark:bg-rose-950/20' : ''}`}>
-          <span className={`text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 ${currentAlert ? 'text-rose-500 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500'}`}>
+          <span
+            className={`text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 ${currentAlert ? 'text-rose-500 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500'}`}
+          >
             <TrendingUp className={`w-3.5 h-3.5 ${currentAlert ? 'text-rose-500 dark:text-rose-400' : 'text-blue-500'}`} />
             Current Utilization
           </span>
           <div className="mt-2 flex items-baseline gap-1.5">
-            <span className={`text-2xl font-bold font-mono tracking-tight ${currentAlert ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-white'}`}>
+            <span
+              className={`text-2xl font-bold font-mono tracking-tight ${currentAlert ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-white'}`}
+            >
               {activeTab === 'cpu' ? `${current.cpuUsage}m` : `${current.memUsage}Mi`}
             </span>
-            <span className={`text-[10px] font-semibold ${currentAlert ? 'text-rose-500 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500'}`}>
+            <span
+              className={`text-[10px] font-semibold ${currentAlert ? 'text-rose-500 dark:text-rose-400' : 'text-slate-400 dark:text-slate-500'}`}
+            >
               {activeTab === 'cpu' ? `(${cpuPercentOfLimit.toFixed(0)}% limit)` : `(${memPercentOfLimit.toFixed(0)}% limit)`}
             </span>
           </div>
@@ -292,9 +277,7 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
             <span className="text-xl font-bold font-mono text-slate-700 dark:text-slate-300">
               {activeTab === 'cpu' ? `${current.cpuRequest}m` : `${current.memRequest}Mi`}
             </span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-semibold">
-              Guaranteed
-            </span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-semibold">Guaranteed</span>
           </div>
         </div>
 
@@ -308,12 +291,9 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
             <span className="text-xl font-bold font-mono text-slate-700 dark:text-slate-300">
               {activeTab === 'cpu' ? `${current.cpuLimit}m` : `${current.memLimit}Mi`}
             </span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-semibold">
-              Max Cap
-            </span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-semibold">Max Cap</span>
           </div>
         </div>
-
       </div>
 
       {/* Main Recharts Visualization Stage */}
@@ -325,52 +305,44 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
         ) : (
           <div className="w-full h-full select-text">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={metrics}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-              >
+              <AreaChart data={metrics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   {/* Linear gradient definitions for glowing visual look */}
                   <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25}/>
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.01}/>
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.01} />
                   </linearGradient>
                   <linearGradient id="colorMem" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.25}/>
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.01}/>
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0.01} />
                   </linearGradient>
                   <linearGradient id="colorAlert" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25}/>
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0.01}/>
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E1E4E8" className="dark:stroke-slate-800/80" />
-                <XAxis 
-                  dataKey="time" 
-                  tickLine={false} 
-                  axisLine={false}
-                  tick={{ fontSize: 9, fill: '#94a3b8', fontWeight: 600 }}
-                />
-                <YAxis 
-                  tickLine={false} 
+                <XAxis dataKey="time" tickLine={false} axisLine={false} tick={{ fontSize: 9, fill: '#94a3b8', fontWeight: 600 }} />
+                <YAxis
+                  tickLine={false}
                   axisLine={false}
                   tick={{ fontSize: 9, fill: '#94a3b8', fontWeight: 600 }}
                   unit={activeTab === 'cpu' ? 'm' : 'M'}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(30, 41, 59, 0.95)', 
-                    border: 'none', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                    border: 'none',
                     borderRadius: '8px',
                     fontSize: '10px',
                     color: '#f8fafc',
-                    fontFamily: 'monospace'
+                    fontFamily: 'monospace',
                   }}
                   itemStyle={{ color: '#f8fafc' }}
                   labelStyle={{ fontWeight: 'bold', color: '#94a3b8', marginBottom: '4px' }}
                 />
-                <Legend 
-                  verticalAlign="top" 
+                <Legend
+                  verticalAlign="top"
                   height={32}
                   iconType="circle"
                   iconSize={6}
@@ -378,75 +350,73 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
                 />
                 {activeTab === 'cpu' ? (
                   <>
-                    <ReferenceLine 
-                      y={current.cpuLimit * (cpuThreshold / 100)} 
-                      stroke="#ef4444" 
-                      strokeDasharray="3 3" 
-                      opacity={0.5} 
-                      label={{ position: 'insideTopLeft', value: `Alert Threshold (${cpuThreshold}%)`, fill: '#ef4444', fontSize: 10, offset: 5 }} 
+                    <ReferenceLine
+                      y={current.cpuLimit * (cpuThreshold / 100)}
+                      stroke="#ef4444"
+                      strokeDasharray="3 3"
+                      opacity={0.5}
+                      label={{
+                        position: 'insideTopLeft',
+                        value: `Alert Threshold (${cpuThreshold}%)`,
+                        fill: '#ef4444',
+                        fontSize: 10,
+                        offset: 5,
+                      }}
                     />
-                    <Area 
-                      name="CPU Usage" 
-                      type="monotone" 
-                      dataKey="cpuUsage" 
-                      stroke={isCpuAlert ? "#ef4444" : "#3b82f6"} 
+                    <Area
+                      name="CPU Usage"
+                      type="monotone"
+                      dataKey="cpuUsage"
+                      stroke={isCpuAlert ? '#ef4444' : '#3b82f6'}
                       strokeWidth={2}
-                      fillOpacity={1} 
-                      fill={isCpuAlert ? "url(#colorAlert)" : "url(#colorCpu)"} 
+                      fillOpacity={1}
+                      fill={isCpuAlert ? 'url(#colorAlert)' : 'url(#colorCpu)'}
                     />
-                    <Area 
-                      name="CPU Request" 
-                      type="monotone" 
-                      dataKey="cpuRequest" 
-                      stroke="#f59e0b" 
+                    <Area
+                      name="CPU Request"
+                      type="monotone"
+                      dataKey="cpuRequest"
+                      stroke="#f59e0b"
                       strokeWidth={1.5}
                       strokeDasharray="4 4"
-                      fillOpacity={0} 
+                      fillOpacity={0}
                     />
-                    <Area 
-                      name="CPU Limit" 
-                      type="monotone" 
-                      dataKey="cpuLimit" 
-                      stroke="#ef4444" 
-                      strokeWidth={1.5}
-                      fillOpacity={0} 
-                    />
+                    <Area name="CPU Limit" type="monotone" dataKey="cpuLimit" stroke="#ef4444" strokeWidth={1.5} fillOpacity={0} />
                   </>
                 ) : (
                   <>
-                    <ReferenceLine 
-                      y={current.memLimit * (memThreshold / 100)} 
-                      stroke="#ef4444" 
-                      strokeDasharray="3 3" 
-                      opacity={0.5} 
-                      label={{ position: 'insideTopLeft', value: `Alert Threshold (${memThreshold}%)`, fill: '#ef4444', fontSize: 10, offset: 5 }} 
+                    <ReferenceLine
+                      y={current.memLimit * (memThreshold / 100)}
+                      stroke="#ef4444"
+                      strokeDasharray="3 3"
+                      opacity={0.5}
+                      label={{
+                        position: 'insideTopLeft',
+                        value: `Alert Threshold (${memThreshold}%)`,
+                        fill: '#ef4444',
+                        fontSize: 10,
+                        offset: 5,
+                      }}
                     />
-                    <Area 
-                      name="Memory Usage" 
-                      type="monotone" 
-                      dataKey="memUsage" 
-                      stroke={isMemAlert ? "#ef4444" : "#8b5cf6"} 
+                    <Area
+                      name="Memory Usage"
+                      type="monotone"
+                      dataKey="memUsage"
+                      stroke={isMemAlert ? '#ef4444' : '#8b5cf6'}
                       strokeWidth={2}
-                      fillOpacity={1} 
-                      fill={isMemAlert ? "url(#colorAlert)" : "url(#colorMem)"} 
+                      fillOpacity={1}
+                      fill={isMemAlert ? 'url(#colorAlert)' : 'url(#colorMem)'}
                     />
-                    <Area 
-                      name="Memory Request" 
-                      type="monotone" 
-                      dataKey="memRequest" 
-                      stroke="#f59e0b" 
+                    <Area
+                      name="Memory Request"
+                      type="monotone"
+                      dataKey="memRequest"
+                      stroke="#f59e0b"
                       strokeWidth={1.5}
                       strokeDasharray="4 4"
-                      fillOpacity={0} 
+                      fillOpacity={0}
                     />
-                    <Area 
-                      name="Memory Limit" 
-                      type="monotone" 
-                      dataKey="memLimit" 
-                      stroke="#ef4444" 
-                      strokeWidth={1.5}
-                      fillOpacity={0} 
-                    />
+                    <Area name="Memory Limit" type="monotone" dataKey="memLimit" stroke="#ef4444" strokeWidth={1.5} fillOpacity={0} />
                   </>
                 )}
               </AreaChart>
@@ -456,9 +426,13 @@ export default function ResourceUsageChart({ name, namespace, activeCluster }: R
       </div>
 
       {/* Footer limits compliance message */}
-      <div className={`px-4 py-2 border-t border-[#E1E4E8] dark:border-slate-700 text-[9px] flex items-center justify-between font-semibold ${currentAlert ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-500' : 'bg-slate-50 dark:bg-slate-900 text-slate-400'}`}>
+      <div
+        className={`px-4 py-2 border-t border-[#E1E4E8] dark:border-slate-700 text-[9px] flex items-center justify-between font-semibold ${currentAlert ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-500' : 'bg-slate-50 dark:bg-slate-900 text-slate-400'}`}
+      >
         <span>Resource quotas active inside virtual cluster control plane</span>
-        <span className="capitalize">{activeTab} utilization status check: {currentAlert ? 'THRESHOLD EXCEEDED' : 'normal'}</span>
+        <span className="capitalize">
+          {activeTab} utilization status check: {currentAlert ? 'THRESHOLD EXCEEDED' : 'normal'}
+        </span>
       </div>
     </div>
   );

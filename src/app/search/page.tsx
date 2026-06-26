@@ -1,8 +1,9 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useApp } from '@/contexts/AppContext';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import Dashboard from '@/components/Dashboard';
+import { useApp } from '@/contexts/AppContext';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();

@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+
 import { getSession } from './session';
 
 // Bypass TLS for self-signed certs (same as OIDC, needed for K8s API too)
@@ -24,7 +25,7 @@ export async function getK8sConfig(request: NextRequest) {
   }
 
   const headerToken = request.headers.get('x-k8s-token');
-  const token = (headerToken && headerToken !== 'undefined') ? headerToken : session?.token;
+  const token = headerToken && headerToken !== 'undefined' ? headerToken : session?.token;
   if (!token) return null;
 
   return { apiUrl, token, caCert };
@@ -33,7 +34,7 @@ export async function getK8sConfig(request: NextRequest) {
 export async function callK8sApi(
   config: { apiUrl: string; token: string; caCert?: string; impersonateUser?: string; impersonateGroups?: string[] },
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ) {
   const url = `${config.apiUrl}${path}`;
 
@@ -56,7 +57,7 @@ export async function callK8sApi(
   }
 
   const headers: Record<string, string> = {
-    'Authorization': `Bearer ${config.token}`,
+    Authorization: `Bearer ${config.token}`,
     'Content-Type': 'application/json',
     ...Object.fromEntries(Object.entries(options.headers || {}).map(([k, v]) => [k, String(v)])),
   };

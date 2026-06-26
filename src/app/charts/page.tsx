@@ -1,11 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useApp } from '@/contexts/AppContext';
-import RepoCatalog from '@/components/RepoCatalog';
-import InstallChartModal from '@/components/InstallChartModal';
-import { HelmChart } from '@/types/helm-chart.type';
 import { useState } from 'react';
+
+import InstallChartModal from '@/components/InstallChartModal';
+import RepoCatalog from '@/components/RepoCatalog';
+import { useApp } from '@/contexts/AppContext';
+import { HelmChart } from '@/types/helm-chart.type';
 
 export default function ChartsPage() {
   const { activeCluster, globalSearchQuery, setGlobalSearchQuery } = useApp();
@@ -16,9 +17,15 @@ export default function ChartsPage() {
     <>
       <RepoCatalog onDeployChart={setSelectedChart} searchQuery={globalSearchQuery} onSearchQueryChange={setGlobalSearchQuery} />
       {selectedChart && (
-        <InstallChartModal chart={selectedChart} activeCluster={activeCluster}
+        <InstallChartModal
+          chart={selectedChart}
+          activeCluster={activeCluster}
           onClose={() => setSelectedChart(null)}
-          onSuccess={() => { setSelectedChart(null); router.push('/'); }} />
+          onSuccess={() => {
+            setSelectedChart(null);
+            router.push('/');
+          }}
+        />
       )}
     </>
   );

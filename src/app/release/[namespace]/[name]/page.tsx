@@ -1,8 +1,9 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useApp } from '@/contexts/AppContext';
+
 import ReleaseDetails from '@/components/ReleaseDetails';
+import { useApp } from '@/contexts/AppContext';
 
 export default function ReleasePage() {
   const params = useParams<{ namespace: string; name: string }>();

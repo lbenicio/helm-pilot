@@ -1,8 +1,28 @@
+import {
+  AlertCircle,
+  ArrowUpCircle,
+  ArrowUpRight,
+  Box,
+  CheckCircle,
+  CheckSquare,
+  HelpCircle,
+  Layers,
+  Loader2,
+  Play,
+  RefreshCw,
+  RotateCcw,
+  Search,
+  SlidersHorizontal,
+  Square,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import React, { useEffect, useState } from 'react';
-import { K8sCluster } from '@/types/k8s-cluster.type';
+
 import { HelmRelease } from '@/types/helm-release.type';
-import { RefreshCw, Search, Layers, Box, AlertCircle, Play, SlidersHorizontal, CheckCircle, HelpCircle, ArrowUpRight, RotateCcw, Trash2, ArrowUpCircle, CheckSquare, Square, X, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { K8sCluster } from '@/types/k8s-cluster.type';
+
 import ActivityLog from './ActivityLog';
 import ClusterHealthWidget from './ClusterHealthWidget';
 import NamespaceQuotaWidget from './NamespaceQuotaWidget';
@@ -53,20 +73,18 @@ export default function Dashboard({
   } | null>(null);
 
   const toggleSelectRelease = (key: string) => {
-    setSelectedReleases(prev =>
-      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-    );
+    setSelectedReleases((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
   };
 
   const toggleSelectAll = (visibleReleases: HelmRelease[]) => {
-    const visibleKeys = visibleReleases.map(r => `${r.namespace}/${r.name}`);
-    const allSelected = visibleKeys.every(k => selectedReleases.includes(k));
+    const visibleKeys = visibleReleases.map((r) => `${r.namespace}/${r.name}`);
+    const allSelected = visibleKeys.every((k) => selectedReleases.includes(k));
     if (allSelected) {
-      setSelectedReleases(prev => prev.filter(k => !visibleKeys.includes(k)));
+      setSelectedReleases((prev) => prev.filter((k) => !visibleKeys.includes(k)));
     } else {
-      setSelectedReleases(prev => {
+      setSelectedReleases((prev) => {
         const newSelection = [...prev];
-        visibleKeys.forEach(k => {
+        visibleKeys.forEach((k) => {
           if (!newSelection.includes(k)) {
             newSelection.push(k);
           }
@@ -77,9 +95,7 @@ export default function Dashboard({
   };
 
   const handleBulkDelete = async () => {
-    const selectedList = releases.filter(r => 
-      selectedReleases.includes(`${r.namespace}/${r.name}`)
-    );
+    const selectedList = releases.filter((r) => selectedReleases.includes(`${r.namespace}/${r.name}`));
     if (selectedList.length === 0) return;
 
     const confirmMsg = `CRITICAL ACTION: Are you sure you want to completely uninstall and delete the ${selectedList.length} selected Helm releases? This will delete all deployment history and active resources.`;
@@ -93,7 +109,7 @@ export default function Dashboard({
       currentReleaseName: '',
       successCount: 0,
       errorCount: 0,
-      logs: []
+      logs: [],
     });
 
     const headers: any = { 'Content-Type': 'application/json' };
@@ -109,16 +125,20 @@ export default function Dashboard({
 
     for (let i = 0; i < selectedList.length; i++) {
       const rel = selectedList[i];
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        current: i + 1,
-        currentReleaseName: `${rel.namespace}/${rel.name}`,
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              current: i + 1,
+              currentReleaseName: `${rel.namespace}/${rel.name}`,
+            }
+          : null,
+      );
 
       try {
         const res = await fetch(`/api/k8s/releases/${rel.namespace}/${rel.name}/uninstall`, {
           method: 'POST',
-          headers
+          headers,
         });
         const data = await res.json();
         if (res.ok) {
@@ -133,35 +153,39 @@ export default function Dashboard({
         newLogs.push(`❌ [${rel.namespace}/${rel.name}] Connection error: ${err.message || err}`);
       }
 
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        successCount: successes,
-        errorCount: errors,
-        logs: [...newLogs]
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              successCount: successes,
+              errorCount: errors,
+              logs: [...newLogs],
+            }
+          : null,
+      );
     }
 
     await fetchReleases();
-    setSelectedReleases(prev => {
-      return prev.filter(k => {
-        const failed = newLogs.some(log => log.includes(`❌ [${k}]`));
+    setSelectedReleases((prev) => {
+      return prev.filter((k) => {
+        const failed = newLogs.some((log) => log.includes(`❌ [${k}]`));
         return failed;
       });
     });
   };
 
   const handleBulkRollback = async () => {
-    const selectedList = releases.filter(r => 
-      selectedReleases.includes(`${r.namespace}/${r.name}`)
-    );
+    const selectedList = releases.filter((r) => selectedReleases.includes(`${r.namespace}/${r.name}`));
     if (selectedList.length === 0) return;
 
-    const invalidRollbacks = selectedList.filter(r => r.revision <= 1);
+    const invalidRollbacks = selectedList.filter((r) => r.revision <= 1);
     if (invalidRollbacks.length > 0) {
-      alert(`The following releases cannot be rolled back because they are at revision v1: ${invalidRollbacks.map(r => r.name).join(', ')}`);
+      alert(
+        `The following releases cannot be rolled back because they are at revision v1: ${invalidRollbacks.map((r) => r.name).join(', ')}`,
+      );
     }
 
-    const validList = selectedList.filter(r => r.revision > 1);
+    const validList = selectedList.filter((r) => r.revision > 1);
     if (validList.length === 0) {
       alert('None of the selected releases can be rolled back (all are at revision v1).');
       return;
@@ -178,7 +202,7 @@ export default function Dashboard({
       currentReleaseName: '',
       successCount: 0,
       errorCount: 0,
-      logs: []
+      logs: [],
     });
 
     const headers: any = { 'Content-Type': 'application/json' };
@@ -195,17 +219,21 @@ export default function Dashboard({
     for (let i = 0; i < validList.length; i++) {
       const rel = validList[i];
       const prevRevision = rel.revision - 1;
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        current: i + 1,
-        currentReleaseName: `${rel.namespace}/${rel.name} (to v${prevRevision})`,
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              current: i + 1,
+              currentReleaseName: `${rel.namespace}/${rel.name} (to v${prevRevision})`,
+            }
+          : null,
+      );
 
       try {
         const res = await fetch(`/api/k8s/releases/${rel.namespace}/${rel.name}/rollback`, {
           method: 'POST',
           headers,
-          body: JSON.stringify({ revision: prevRevision })
+          body: JSON.stringify({ revision: prevRevision }),
         });
         const data = await res.json();
         if (res.ok) {
@@ -220,27 +248,29 @@ export default function Dashboard({
         newLogs.push(`❌ [${rel.namespace}/${rel.name}] Connection error: ${err.message || err}`);
       }
 
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        successCount: successes,
-        errorCount: errors,
-        logs: [...newLogs]
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              successCount: successes,
+              errorCount: errors,
+              logs: [...newLogs],
+            }
+          : null,
+      );
     }
 
     await fetchReleases();
-    setSelectedReleases(prev => {
-      return prev.filter(k => {
-        const failed = newLogs.some(log => log.includes(`❌ [${k}]`));
+    setSelectedReleases((prev) => {
+      return prev.filter((k) => {
+        const failed = newLogs.some((log) => log.includes(`❌ [${k}]`));
         return failed;
       });
     });
   };
 
   const handleBulkUpgrade = async () => {
-    const selectedList = releases.filter(r => 
-      selectedReleases.includes(`${r.namespace}/${r.name}`)
-    );
+    const selectedList = releases.filter((r) => selectedReleases.includes(`${r.namespace}/${r.name}`));
     if (selectedList.length === 0) return;
 
     const confirmMsg = `Are you sure you want to upgrade the ${selectedList.length} selected Helm releases? This will fetch their current configuration values and trigger an upgrade transaction.`;
@@ -254,7 +284,7 @@ export default function Dashboard({
       currentReleaseName: '',
       successCount: 0,
       errorCount: 0,
-      logs: []
+      logs: [],
     });
 
     const headers: any = { 'Content-Type': 'application/json' };
@@ -270,15 +300,19 @@ export default function Dashboard({
 
     for (let i = 0; i < selectedList.length; i++) {
       const rel = selectedList[i];
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        current: i + 1,
-        currentReleaseName: `${rel.namespace}/${rel.name}`,
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              current: i + 1,
+              currentReleaseName: `${rel.namespace}/${rel.name}`,
+            }
+          : null,
+      );
 
       try {
         newLogs.push(`🔄 [${rel.namespace}/${rel.name}] Fetching active configurations...`);
-        setBulkProgress(prev => prev ? { ...prev, logs: [...newLogs] } : null);
+        setBulkProgress((prev) => (prev ? { ...prev, logs: [...newLogs] } : null));
 
         const detailRes = await fetch(`/api/k8s/releases/${rel.namespace}/${rel.name}`, { headers });
         if (!detailRes.ok) {
@@ -287,7 +321,7 @@ export default function Dashboard({
         const detailData = await detailRes.json();
         const currentValues = detailData.values || '';
 
-        const filteredIntermediates = newLogs.filter(log => !log.startsWith(`🔄 [${rel.namespace}/${rel.name}]`));
+        const filteredIntermediates = newLogs.filter((log) => !log.startsWith(`🔄 [${rel.namespace}/${rel.name}]`));
 
         const upgradeRes = await fetch('/api/k8s/releases/install', {
           method: 'POST',
@@ -299,7 +333,7 @@ export default function Dashboard({
             chartVersion: rel.chartVersion,
             valuesYaml: currentValues,
             isUpgrade: true,
-          })
+          }),
         });
         const upgradeData = await upgradeRes.json();
 
@@ -314,27 +348,30 @@ export default function Dashboard({
         // Replace log array
         newLogs.length = 0;
         newLogs.push(...filteredIntermediates);
-
       } catch (err: any) {
         errors++;
-        const filteredIntermediates = newLogs.filter(log => !log.startsWith(`🔄 [${rel.namespace}/${rel.name}]`));
+        const filteredIntermediates = newLogs.filter((log) => !log.startsWith(`🔄 [${rel.namespace}/${rel.name}]`));
         filteredIntermediates.push(`❌ [${rel.namespace}/${rel.name}] Error: ${err.message || err}`);
         newLogs.length = 0;
         newLogs.push(...filteredIntermediates);
       }
 
-      setBulkProgress(prev => prev ? {
-        ...prev,
-        successCount: successes,
-        errorCount: errors,
-        logs: [...newLogs]
-      } : null);
+      setBulkProgress((prev) =>
+        prev
+          ? {
+              ...prev,
+              successCount: successes,
+              errorCount: errors,
+              logs: [...newLogs],
+            }
+          : null,
+      );
     }
 
     await fetchReleases();
-    setSelectedReleases(prev => {
-      return prev.filter(k => {
-        const failed = newLogs.some(log => log.includes(`❌ [${k}]`));
+    setSelectedReleases((prev) => {
+      return prev.filter((k) => {
+        const failed = newLogs.some((log) => log.includes(`❌ [${k}]`));
         return failed;
       });
     });
@@ -377,8 +414,7 @@ export default function Dashboard({
   // Filter releases locally based on search query
   const filteredReleases = releases.filter((r) => {
     const matchesSearch =
-      r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.chartName.toLowerCase().includes(searchQuery.toLowerCase());
+      r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.chartName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
@@ -386,17 +422,20 @@ export default function Dashboard({
   const totalReleases = releases.length;
   const healthyCount = releases.filter((r) => r.status === 'deployed').length;
   const failedCount = releases.filter((r) => r.status === 'failed').length;
-  const uniqueNsCount = Array.from(new Set(releases.map(r => r.namespace))).length;
+  const uniqueNsCount = Array.from(new Set(releases.map((r) => r.namespace))).length;
 
   // Namespace distribution counts
-  const nsCounts = releases.reduce((acc, curr) => {
-    acc[curr.namespace] = (acc[curr.namespace] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const nsCounts = releases.reduce(
+    (acc, curr) => {
+      acc[curr.namespace] = (acc[curr.namespace] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
   const sortedNsCounts = (Object.entries(nsCounts) as [string, number][]).sort((a, b) => b[1] - a[1]);
 
   // Warning status releases (releases whose status is not 'deployed')
-  const warningReleasesList = releases.filter(r => r.status !== 'deployed');
+  const warningReleasesList = releases.filter((r) => r.status !== 'deployed');
   const warningReleasesCount = warningReleasesList.length;
 
   // Colors for namespaces
@@ -410,7 +449,7 @@ export default function Dashboard({
     'bg-amber-500',
     'bg-cyan-500',
   ];
-  
+
   const nsTextColorsList = [
     'text-blue-600 dark:text-blue-400',
     'text-purple-600 dark:text-purple-400',
@@ -434,19 +473,18 @@ export default function Dashboard({
   ];
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="space-y-6 font-sans select-none"
     >
-      
       {/* Cluster Health Widget */}
       <ClusterHealthWidget activeCluster={activeCluster} />
-      
+
       {/* Top statistics summary row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.05 }}
@@ -473,7 +511,7 @@ export default function Dashboard({
           )}
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
@@ -498,13 +536,15 @@ export default function Dashboard({
           )}
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.15 }}
           className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 p-5 rounded-xl flex flex-col justify-between shadow-sm"
         >
-          <div className="text-slate-500 dark:text-slate-400 font-semibold text-[10px] uppercase tracking-wider mb-2">Healthy Workloads</div>
+          <div className="text-slate-500 dark:text-slate-400 font-semibold text-[10px] uppercase tracking-wider mb-2">
+            Healthy Workloads
+          </div>
           {loading ? (
             <div className="space-y-2.5 animate-pulse">
               <div className="h-7 w-20 bg-slate-200 dark:bg-slate-800 rounded-md" />
@@ -525,7 +565,7 @@ export default function Dashboard({
           )}
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
@@ -544,9 +584,7 @@ export default function Dashboard({
             </>
           ) : (
             <>
-              <div className="text-2xl font-bold text-rose-500 font-sans">
-                {failedCount}
-              </div>
+              <div className="text-2xl font-bold text-rose-500 font-sans">{failedCount}</div>
               <span className="text-[10px] text-rose-500 mt-2 block">Requires diagnostic check</span>
             </>
           )}
@@ -600,7 +638,9 @@ export default function Dashboard({
           ) : (
             <div className="lg:col-span-4 space-y-3 bg-slate-50 dark:bg-slate-950/40 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Deployments Status</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                  Deployments Status
+                </span>
                 <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 rounded">
                   {((healthyCount / (totalReleases || 1)) * 100).toFixed(0)}% Healthy
                 </span>
@@ -612,8 +652,8 @@ export default function Dashboard({
                   <span className="text-xs font-normal text-slate-400">Total Deployments</span>
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                  <div 
-                    className="bg-emerald-500 h-full transition-all duration-500" 
+                  <div
+                    className="bg-emerald-500 h-full transition-all duration-500"
                     style={{ width: `${(healthyCount / (totalReleases || 1)) * 100}%` }}
                   />
                 </div>
@@ -665,7 +705,7 @@ export default function Dashboard({
                     const widthPct = (count / totalReleases) * 100;
                     const colorClass = nsColorsList[idx % nsColorsList.length];
                     return (
-                      <motion.div 
+                      <motion.div
                         key={ns}
                         initial={{ width: 0 }}
                         animate={{ width: `${widthPct}%` }}
@@ -674,9 +714,7 @@ export default function Dashboard({
                         title={`${ns}: ${count} deployment(s) (${widthPct.toFixed(0)}%)`}
                       >
                         {widthPct > 12 && (
-                          <span className="text-[9px] font-bold text-white font-mono drop-shadow-sm truncate px-1">
-                            {count}
-                          </span>
+                          <span className="text-[9px] font-bold text-white font-mono drop-shadow-sm truncate px-1">{count}</span>
                         )}
                       </motion.div>
                     );
@@ -750,16 +788,14 @@ export default function Dashboard({
                       <span className="text-[11px] font-bold text-amber-800 dark:text-amber-400 block">
                         {warningReleasesCount} Warning Release(s)
                       </span>
-                      <span className="text-[9px] text-amber-600 dark:text-amber-500">
-                        Require configuration or resource review
-                      </span>
+                      <span className="text-[9px] text-amber-600 dark:text-amber-500">Require configuration or resource review</span>
                     </div>
                   </div>
 
                   <div className="max-h-12.5 overflow-y-auto space-y-1 text-[9px] font-mono scrollbar-thin">
-                    {warningReleasesList.slice(0, 3).map(r => (
-                      <div 
-                        key={`${r.namespace}/${r.name}`} 
+                    {warningReleasesList.slice(0, 3).map((r) => (
+                      <div
+                        key={`${r.namespace}/${r.name}`}
                         onClick={() => onSelectRelease(r.namespace, r.name)}
                         className="bg-white dark:bg-slate-900/80 hover:bg-white/90 border border-amber-100 dark:border-amber-900/30 px-1.5 py-0.5 rounded text-amber-800 dark:text-amber-300 flex justify-between items-center cursor-pointer truncate gap-1"
                       >
@@ -783,10 +819,7 @@ export default function Dashboard({
       </div>
 
       {/* Namespace Resource Quotas and Utilization */}
-      <NamespaceQuotaWidget 
-        namespace={selectedNamespace} 
-        activeCluster={activeCluster} 
-      />
+      <NamespaceQuotaWidget namespace={selectedNamespace} activeCluster={activeCluster} />
 
       {/* Control Filters Row */}
       <div className="bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
@@ -813,9 +846,13 @@ export default function Dashboard({
             >
               <option value="all">All Namespaces</option>
               <option value="default">default</option>
-              {namespaces.filter(ns => ns !== 'default').map((ns) => (
-                <option key={ns} value={ns}>{ns}</option>
-              ))}
+              {namespaces
+                .filter((ns) => ns !== 'default')
+                .map((ns) => (
+                  <option key={ns} value={ns}>
+                    {ns}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -855,10 +892,13 @@ export default function Dashboard({
 
           <div className="space-y-1">
             <div className="text-xs text-slate-500 dark:text-slate-400">
-              Currently processing: <span className="font-semibold text-slate-800 dark:text-slate-200">{bulkProgress.currentReleaseName || 'Initial configuration...'}</span>
+              Currently processing:{' '}
+              <span className="font-semibold text-slate-800 dark:text-slate-200">
+                {bulkProgress.currentReleaseName || 'Initial configuration...'}
+              </span>
             </div>
             <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="bg-blue-600 h-full transition-all duration-300"
                 style={{ width: `${(bulkProgress.current / bulkProgress.total) * 100}%` }}
               />
@@ -870,7 +910,9 @@ export default function Dashboard({
               <div className="text-slate-400 italic">Initializing transaction log...</div>
             ) : (
               bulkProgress.logs.map((log, index) => (
-                <div key={index} className="whitespace-pre-wrap leading-relaxed">{log}</div>
+                <div key={index} className="whitespace-pre-wrap leading-relaxed">
+                  {log}
+                </div>
               ))
             )}
           </div>
@@ -878,7 +920,8 @@ export default function Dashboard({
           {bulkProgress.current === bulkProgress.total && (
             <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
               <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                Completed with <span className="font-bold text-emerald-600">{bulkProgress.successCount} success</span> and <span className="font-bold text-rose-500">{bulkProgress.errorCount} failed</span>
+                Completed with <span className="font-bold text-emerald-600">{bulkProgress.successCount} success</span> and{' '}
+                <span className="font-bold text-rose-500">{bulkProgress.errorCount} failed</span>
               </div>
               <button
                 onClick={() => setBulkProgress(null)}
@@ -944,7 +987,8 @@ export default function Dashboard({
           <AlertCircle className="w-10 h-10 text-rose-500 mb-3" />
           <h3 className="font-semibold text-rose-900 mb-1">Cluster Handshake Failed</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md leading-relaxed mb-4">
-            {error}. Verify the cluster's endpoint, Service Account JWT token, and ensure the target cluster allows anonymous or bearer authentications.
+            {error}. Verify the cluster's endpoint, Service Account JWT token, and ensure the target cluster allows anonymous or bearer
+            authentications.
           </p>
           <button
             onClick={fetchReleases}
@@ -983,7 +1027,11 @@ export default function Dashboard({
                     <input
                       type="checkbox"
                       disabled={loading}
-                      checked={!loading && filteredReleases.length > 0 && filteredReleases.every(r => selectedReleases.includes(`${r.namespace}/${r.name}`))}
+                      checked={
+                        !loading &&
+                        filteredReleases.length > 0 &&
+                        filteredReleases.every((r) => selectedReleases.includes(`${r.namespace}/${r.name}`))
+                      }
                       onChange={() => toggleSelectAll(filteredReleases)}
                       className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer transition disabled:opacity-50"
                       title="Select all visible releases"
@@ -1031,67 +1079,67 @@ export default function Dashboard({
                 ) : (
                   <AnimatePresence initial={false}>
                     {filteredReleases.map((release, index) => {
-                    const isSelected = selectedReleases.includes(`${release.namespace}/${release.name}`);
-                    return (
-                      <motion.tr
-                        key={`${release.namespace}/${release.name}`}
-                        layout="position"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ 
-                          layout: { type: 'spring', damping: 25, stiffness: 220 },
-                          opacity: { duration: 0.2 },
-                          y: { duration: 0.25 }
-                        }}
-                        className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group ${
-                          isSelected ? 'bg-blue-50/40 dark:bg-blue-950/10' : ''
-                        }`}
-                      >
-                      <td className="py-3.5 px-6 text-center">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectRelease(`${release.namespace}/${release.name}`)}
-                          className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer transition"
-                        />
-                      </td>
-                      <td className="py-3.5 px-6 font-semibold text-[#1A1A1A] dark:text-slate-100 capitalize">{release.name}</td>
-                      <td className="py-3.5 px-6">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
-                          {release.namespace}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-6">
-                        <div className="font-semibold text-slate-700 dark:text-slate-200">{release.chartName}</div>
-                        <div className="text-[10px] text-slate-400">v{release.chartVersion}</div>
-                      </td>
-                      <td className="py-3.5 px-6 font-mono text-slate-500 dark:text-slate-400 font-bold">v{release.revision}</td>
-                      <td className="py-3.5 px-6">
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                          release.status === 'deployed'
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-rose-100 text-rose-700'
-                        }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${release.status === 'deployed' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
-                          {release.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-6 text-slate-400 text-[10px]">
-                        {new Date(release.updated).toLocaleString()}
-                      </td>
-                      <td className="py-3.5 px-6 text-right">
-                        <button
-                          onClick={() => onSelectRelease(release.namespace, release.name)}
-                          className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-950 rounded-lg transition text-[11px] font-semibold text-slate-600 dark:text-slate-300 cursor-pointer active:scale-95"
+                      const isSelected = selectedReleases.includes(`${release.namespace}/${release.name}`);
+                      return (
+                        <motion.tr
+                          key={`${release.namespace}/${release.name}`}
+                          layout="position"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{
+                            layout: { type: 'spring', damping: 25, stiffness: 220 },
+                            opacity: { duration: 0.2 },
+                            y: { duration: 0.25 },
+                          }}
+                          className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition group ${
+                            isSelected ? 'bg-blue-50/40 dark:bg-blue-950/10' : ''
+                          }`}
                         >
-                          Manage
-                        </button>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-                </AnimatePresence>
+                          <td className="py-3.5 px-6 text-center">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelectRelease(`${release.namespace}/${release.name}`)}
+                              className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer transition"
+                            />
+                          </td>
+                          <td className="py-3.5 px-6 font-semibold text-[#1A1A1A] dark:text-slate-100 capitalize">{release.name}</td>
+                          <td className="py-3.5 px-6">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
+                              {release.namespace}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-6">
+                            <div className="font-semibold text-slate-700 dark:text-slate-200">{release.chartName}</div>
+                            <div className="text-[10px] text-slate-400">v{release.chartVersion}</div>
+                          </td>
+                          <td className="py-3.5 px-6 font-mono text-slate-500 dark:text-slate-400 font-bold">v{release.revision}</td>
+                          <td className="py-3.5 px-6">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                                release.status === 'deployed' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+                              }`}
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${release.status === 'deployed' ? 'bg-emerald-500' : 'bg-rose-500'}`}
+                              />
+                              {release.status}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-6 text-slate-400 text-[10px]">{new Date(release.updated).toLocaleString()}</td>
+                          <td className="py-3.5 px-6 text-right">
+                            <button
+                              onClick={() => onSelectRelease(release.namespace, release.name)}
+                              className="px-3 py-1.5 bg-white dark:bg-slate-900 border border-[#E1E4E8] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-950 rounded-lg transition text-[11px] font-semibold text-slate-600 dark:text-slate-300 cursor-pointer active:scale-95"
+                            >
+                              Manage
+                            </button>
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
                 )}
               </tbody>
             </table>
@@ -1131,10 +1179,10 @@ export default function Dashboard({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      transition={{ 
+                      transition={{
                         layout: { type: 'spring', damping: 25, stiffness: 220 },
                         opacity: { duration: 0.2 },
-                        y: { duration: 0.25 }
+                        y: { duration: 0.25 },
                       }}
                       className={`p-4 space-y-3 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition ${
                         isSelected ? 'bg-blue-50/30 dark:bg-blue-950/5' : ''
@@ -1149,11 +1197,11 @@ export default function Dashboard({
                         />
                         <div className="flex-1 flex items-center justify-between">
                           <span className="font-semibold text-[#1A1A1A] dark:text-slate-100 capitalize">{release.name}</span>
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                            release.status === 'deployed'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-rose-100 text-rose-700'
-                          }`}>
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                              release.status === 'deployed' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+                            }`}
+                          >
                             {release.status}
                           </span>
                         </div>
@@ -1164,7 +1212,10 @@ export default function Dashboard({
                           Namespace: <b className="text-slate-600 dark:text-slate-300">{release.namespace}</b>
                         </div>
                         <div>
-                          Chart: <b className="text-slate-600 dark:text-slate-300">{release.chartName} (v{release.chartVersion})</b>
+                          Chart:{' '}
+                          <b className="text-slate-600 dark:text-slate-300">
+                            {release.chartName} (v{release.chartVersion})
+                          </b>
                         </div>
                         <div>
                           Revision: <b className="text-slate-600 dark:text-slate-300">v{release.revision}</b>
@@ -1190,7 +1241,7 @@ export default function Dashboard({
           </div>
         </div>
       )}
-      
+
       {/* Real-time Activity Stream panel */}
       <ActivityLog activeCluster={activeCluster} />
     </motion.div>

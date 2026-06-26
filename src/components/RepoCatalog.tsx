@@ -1,7 +1,8 @@
+import { Cpu, FolderPlus, Info, Library, Search, ShieldCheck, Trash2, X, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+
 import { ChartRepo } from '@/types/chart-repo.type';
 import { HelmChart } from '@/types/helm-chart.type';
-import { Search, FolderPlus, Trash2, Library, Cpu, Info, Zap, X, ShieldCheck } from 'lucide-react';
 
 interface RepoCatalogProps {
   onDeployChart: (chart: HelmChart) => void;
@@ -9,14 +10,10 @@ interface RepoCatalogProps {
   onSearchQueryChange?: (query: string) => void;
 }
 
-export default function RepoCatalog({
-  onDeployChart,
-  searchQuery: passedSearchQuery,
-  onSearchQueryChange,
-}: RepoCatalogProps) {
+export default function RepoCatalog({ onDeployChart, searchQuery: passedSearchQuery, onSearchQueryChange }: RepoCatalogProps) {
   const [repos, setRepos] = useState<ChartRepo[]>([]);
   const [charts, setCharts] = useState<HelmChart[]>([]);
-  
+
   // Search/Filters
   const [localSearchQuery, setLocalSearchQuery] = useState('');
   const searchQuery = onSearchQueryChange ? (passedSearchQuery ?? '') : localSearchQuery;
@@ -68,8 +65,7 @@ export default function RepoCatalog({
 
   const filteredCharts = charts.filter((chart) => {
     const matchesSearch =
-      chart.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      chart.description.toLowerCase().includes(searchQuery.toLowerCase());
+      chart.name.toLowerCase().includes(searchQuery.toLowerCase()) || chart.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
   });
 
@@ -169,7 +165,10 @@ export default function RepoCatalog({
         </div>
 
         {addingRepo && (
-          <form onSubmit={handleAddRepo} className="bg-slate-50 dark:bg-slate-800 border border-[#E1E4E8] dark:border-slate-700 p-3 rounded-lg space-y-3">
+          <form
+            onSubmit={handleAddRepo}
+            className="bg-slate-50 dark:bg-slate-800 border border-[#E1E4E8] dark:border-slate-700 p-3 rounded-lg space-y-3"
+          >
             <div>
               <label className="block text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase mb-1">Repo Name</label>
               <input
@@ -223,10 +222,7 @@ export default function RepoCatalog({
                   : 'bg-transparent border-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
-              <span
-                className="flex-1 text-left truncate cursor-pointer py-1.5"
-                onClick={() => setSelectedRepo(repo.name)}
-              >
+              <span className="flex-1 text-left truncate cursor-pointer py-1.5" onClick={() => setSelectedRepo(repo.name)}>
                 {repo.name}
               </span>
               <button
@@ -311,9 +307,7 @@ export default function RepoCatalog({
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 min-h-8">
-                    {chart.description}
-                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 min-h-8">{chart.description}</p>
                 </div>
 
                 <div className="border-t border-[#E1E4E8] dark:border-slate-700 pt-3 mt-4 flex items-center justify-between">

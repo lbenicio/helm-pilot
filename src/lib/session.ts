@@ -1,5 +1,5 @@
+import { jwtVerify, SignJWT } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
-import { SignJWT, jwtVerify } from 'jose';
 
 const SESSION_SECRET = new TextEncoder().encode(process.env.SESSION_SECRET || 'helm-manager-session-secret-key-2024');
 
@@ -22,10 +22,7 @@ export async function getSession(request: NextRequest): Promise<SessionUser | nu
 }
 
 export async function setSession(user: SessionUser): Promise<NextResponse> {
-  const token = await new SignJWT({ user })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('24h')
-    .sign(SESSION_SECRET);
+  const token = await new SignJWT({ user }).setProtectedHeader({ alg: 'HS256' }).setExpirationTime('24h').sign(SESSION_SECRET);
 
   const response = NextResponse.redirect(new URL('/', process.env.APP_URL || 'http://localhost:3000'));
   response.cookies.set('helm_session', token, {

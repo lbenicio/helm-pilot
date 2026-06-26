@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getOidcClient } from '@/lib/oidc';
-import { setSession, SessionUser } from '@/lib/session';
+
 import { logger } from '@/lib/logger';
+import { fetchUserInfo, handleCallback } from '@/lib/oidc';
+import { SessionUser, setSession } from '@/lib/session';
 
 export async function GET(request: NextRequest) {
   if (!process.env.OIDC_CLIENT_ID) {
@@ -18,12 +19,11 @@ export async function GET(request: NextRequest) {
   let groups: string[] = [];
 
   try {
-    const client = await getOidcClient(redirectUri);
-    const searchParams = Object.fromEntries(request.nextUrl.searchParams);
-
-    if (Object.keys(searchParams).length > 0) {
-      const tokenSet = await client.callback(redirectUri, searchParams, { state: oidcState });
+    const params = Object.fromEntries(request.nextUrl.searchParams);
+    if (Object.keys(params).length > 0) {
+      const tokenSet = await handleCallback(redirectUri, params, oidcState);
       const claims = tokenSet.claims();
+
       email = (claims.email as string) || email;
       name = (claims.name || claims.preferred_username || claims.given_name || name) as string;
       token = tokenSet.id_token || tokenSet.access_token;
@@ -31,10 +31,12 @@ export async function GET(request: NextRequest) {
 
       if ((email === 'admin@example.com' || name === 'Administrator') && tokenSet.access_token) {
         try {
-          const userInfo = await client.userinfo(tokenSet.access_token);
+          const userInfo = await fetchUserInfo(tokenSet.access_token);
           email = (userInfo.email as string) || email;
           name = (userInfo.name || userInfo.preferred_username || userInfo.given_name || name) as string;
-        } catch { logger.warn('Could not fetch userinfo'); }
+        } catch {
+          logger.warn('Could not fetch userinfo');
+        }
       }
     }
   } catch (err: any) {
@@ -44,8 +46,8 @@ export async function GET(request: NextRequest) {
 
   const allowedGroups = process.env.OIDC_ALLOWED_GROUPS;
   if (allowedGroups) {
-    const allowed = allowedGroups.split(',').map(g => g.trim().toLowerCase());
-    if (!allowed.some(g => groups.map(x => x.toLowerCase()).includes(g))) {
+    const allowed = allowedGroups.split(',').map((g) => g.trim().toLowerCase());
+    if (!allowed.some((g) => groups.map((x) => x.toLowerCase()).includes(g))) {
       logger.warn(`Access denied for ${email}`);
       return new NextResponse('Access denied: unauthorized groups.', { status: 403 });
     }
