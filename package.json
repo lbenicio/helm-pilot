@@ -16,7 +16,8 @@
     "docker:push": "docker image push helm-pilot:latest",
     "docker:release": "npm run docker:build && npm run docker:push",
     "deps:update": "npm-check-updates -u && npm run deps:install",
-    "deps:install": "npm install --no-fund --no-audit --verbose"
+    "deps:install": "npm install --no-fund --no-audit --verbose",
+    "gen:release": "node scripts/release.mjs --bump"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
