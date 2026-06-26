@@ -296,7 +296,7 @@ export default function RepoCatalog({
                         )}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition truncate capitalize max-w-[150px]">
+                        <h4 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-blue-600 transition truncate capitalize max-w-37.5">
                           {chart.name}
                         </h4>
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
@@ -311,7 +311,7 @@ export default function RepoCatalog({
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 min-h-[32px]">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 min-h-8">
                     {chart.description}
                   </p>
                 </div>

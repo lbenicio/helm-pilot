@@ -155,7 +155,7 @@ export default function ClusterSelector({
         className="flex items-center gap-2.5 px-4 py-2 rounded-xl border text-sm font-medium transition cursor-pointer active:scale-95 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/30 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/40"
       >
         <Server className="w-4 h-4 shrink-0" />
-        <span className="max-w-[150px] truncate">
+        <span className="max-w-37.5 truncate">
           {activeCluster?.name || 'Cluster'}
         </span>
         <div 
@@ -204,7 +204,7 @@ export default function ClusterSelector({
                     </div>
                     <div>
                       <div className="text-xs font-semibold">{activeCluster.name}</div>
-                      <div className="text-[10px] text-emerald-600 dark:text-emerald-400 truncate max-w-[180px]">{activeCluster.apiUrl}</div>
+                      <div className="text-[10px] text-emerald-600 dark:text-emerald-400 truncate max-w-45">{activeCluster.apiUrl}</div>
                     </div>
                   </div>
                   <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />

@@ -462,7 +462,7 @@ export default function Dashboard({
             <>
               <div className="flex items-center gap-2">
                 <div className={`w-2.5 h-2.5 rounded-full ${activeCluster ? 'bg-emerald-500' : 'bg-slate-400'} shrink-0`} />
-                <div className="text-sm font-bold text-[#1A1A1A] dark:text-slate-100 truncate max-w-[130px]">
+                <div className="text-sm font-bold text-[#1A1A1A] dark:text-slate-100 truncate max-w-32.5">
                   {activeCluster ? activeCluster.name : 'No Cluster'}
                 </div>
               </div>
@@ -725,7 +725,7 @@ export default function Dashboard({
           ) : loading ? (
             <div className="lg:col-span-3 space-y-3.5 animate-pulse">
               <div className="h-3.5 w-36 bg-slate-200 dark:bg-slate-850 rounded" />
-              <div className="bg-slate-50/50 dark:bg-slate-950/15 border border-slate-200/60 dark:border-slate-800/80 rounded-xl p-3.5 h-[105px] flex flex-col justify-center gap-2">
+              <div className="bg-slate-50/50 dark:bg-slate-950/15 border border-slate-200/60 dark:border-slate-800/80 rounded-xl p-3.5 h-26.25 flex flex-col justify-center gap-2">
                 <div className="h-4 w-32 bg-slate-200 dark:bg-slate-850 rounded" />
                 <div className="h-3 w-24 bg-slate-100 dark:bg-slate-800/60 rounded" />
               </div>
@@ -737,13 +737,13 @@ export default function Dashboard({
               </span>
 
               {warningReleasesCount === 0 ? (
-                <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-3.5 flex flex-col items-center justify-center text-center h-[105px]">
+                <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl p-3.5 flex flex-col items-center justify-center text-center h-26.25">
                   <CheckCircle className="w-5 h-5 text-emerald-500 mb-1.5" />
                   <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-400">All Workloads Stable</span>
                   <span className="text-[9px] text-emerald-600 dark:text-emerald-500 mt-0.5">No anomalies detected</span>
                 </div>
               ) : (
-                <div className="bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/40 rounded-xl p-3.5 flex flex-col justify-between min-h-[105px] space-y-2">
+                <div className="bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/40 rounded-xl p-3.5 flex flex-col justify-between min-h-26.25 space-y-2">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 animate-pulse" />
                     <div>
@@ -756,7 +756,7 @@ export default function Dashboard({
                     </div>
                   </div>
 
-                  <div className="max-h-[50px] overflow-y-auto space-y-1 text-[9px] font-mono scrollbar-thin">
+                  <div className="max-h-12.5 overflow-y-auto space-y-1 text-[9px] font-mono scrollbar-thin">
                     {warningReleasesList.slice(0, 3).map(r => (
                       <div 
                         key={`${r.namespace}/${r.name}`} 

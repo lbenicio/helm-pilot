@@ -151,7 +151,7 @@ export default function ClusterHealthWidget({ activeCluster }: ClusterHealthWidg
               onChange={() => setAutoRefresh(!autoRefresh)}
               className="sr-only peer"
             />
-            <div className="relative w-7 h-4 bg-slate-200 peer-focus:outline-none dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
+            <div className="relative w-7 h-4 bg-slate-200 peer-focus:outline-none dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:inset-s-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-blue-600"></div>
             <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               {autoRefresh ? 'Live Polling' : 'Manual'}
             </span>

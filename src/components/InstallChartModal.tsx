@@ -159,7 +159,7 @@ export default function InstallChartModal({
             </div>
 
             {/* Right Column: Values YAML Editor */}
-            <div className="lg:col-span-8 flex flex-col min-h-[300px]">
+            <div className="lg:col-span-8 flex flex-col min-h-75">
               <label className="block text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider mb-1.5">
                 values.yaml (Custom Configuration)
               </label>

@@ -512,7 +512,7 @@ export default function ReleaseDetails({
                     return (
                       <div key={rev.revision} className="relative group">
                         {/* Timeline Bullet */}
-                        <div className={`absolute -left-[31px] top-4 w-3.5 h-3.5 rounded-full border-2 transition-all ${
+                        <div className={`absolute -left-7.75 top-4 w-3.5 h-3.5 rounded-full border-2 transition-all ${
                           isCurrentActive
                             ? 'bg-blue-600 border-blue-600 ring-4 ring-blue-100 dark:ring-blue-950 scale-110'
                             : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700'
