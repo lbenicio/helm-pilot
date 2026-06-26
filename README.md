@@ -92,7 +92,7 @@ OIDC_SKIP_TLS_VERIFY="false"
 Clone the repository and install the project dependencies:
 
 ```bash
-npm install
+npm run deps:install
 ```
 
 ### Local Development
@@ -100,7 +100,7 @@ npm install
 Start the development server with real-time asset compilation and hot reloading:
 
 ```bash
-npm run dev
+npm run start:dev
 ```
 
 The application will be accessible locally at `http://localhost:3000`.
@@ -114,7 +114,7 @@ The application will be accessible locally at `http://localhost:3000`.
 To compile the application for production use:
 
 ```bash
-npm run build
+npm run build:prod
 ```
 
 The build process executes two steps:
@@ -126,7 +126,7 @@ The build process executes two steps:
 Run the compiled full-stack server:
 
 ```bash
-npm run start
+npm run start:prod
 ```
 
 ---
@@ -159,6 +159,6 @@ The system will start listening on port `3000`.
 
 - **Strict Type Checking**: Every file must pass the TypeScript compilation rules without exceptions. Verify type safety via:
   ```bash
-  npm run lint
+  npm run fmt:lint
   ```
 - **Pruned Production Images**: The container build uses `node-prune` to eliminate unnecessary documentation, markdown files, and TypeScript definitions from production `node_modules` for high-performance container spin-ups.
