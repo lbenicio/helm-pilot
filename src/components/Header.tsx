@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useApp } from '@/contexts/AppContext';
 import ClusterSelector from './ClusterSelector';
 import ContextMenu from './ContextMenu';
-import { Ship, Library, LayoutDashboard, LogOut, Moon, Sun, Search, X, ChevronRight, Folder, Copy } from 'lucide-react';
+import { Ship, Library, LayoutDashboard, LogOut, Moon, Sun, Search, X, ChevronRight, Folder, Copy, Activity, Heart } from 'lucide-react';
 import { motion } from 'motion/react';
 import pkg from '@/../package.json';
 
@@ -18,6 +18,9 @@ export default function Header() {
   const isCharts = pathname === '/charts';
   const isDashboard = pathname === '/';
   const isRelease = pathname.startsWith('/release/');
+  const isEvents = pathname === '/events';
+  const isHealth = pathname === '/health';
+  const isSearch = pathname === '/search';
   const parts = pathname.split('/').filter(Boolean);
   const releaseNs = isRelease ? parts[1] : null;
   const releaseName = isRelease ? parts[2] : null;
@@ -40,6 +43,12 @@ export default function Header() {
             </button>
             <button onClick={() => router.push('/charts')} className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${isCharts ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`}>
               <Library className="w-3.5 h-3.5" />Charts
+            </button>
+            <button onClick={() => router.push('/events')} className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${isEvents ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`}>
+              <Activity className="w-3.5 h-3.5" />Events
+            </button>
+            <button onClick={() => router.push('/health')} className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${isHealth ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50'}`}>
+              <Heart className="w-3.5 h-3.5" />Health
             </button>
           </nav>
 
@@ -94,6 +103,18 @@ export default function Header() {
           ) : isCharts ? (
             <span className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-bold flex items-center gap-1.5">
               <Library className="w-3.5 h-3.5 text-slate-400" /><span>Chart Store Catalog</span>
+            </span>
+          ) : isEvents ? (
+            <span className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-bold flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5 text-slate-400" /><span>Live Events</span>
+            </span>
+          ) : isHealth ? (
+            <span className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-bold flex items-center gap-1.5">
+              <Heart className="w-3.5 h-3.5 text-slate-400" /><span>Cluster Health</span>
+            </span>
+          ) : isSearch ? (
+            <span className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-bold flex items-center gap-1.5">
+              <Search className="w-3.5 h-3.5 text-slate-400" /><span>Search Results</span>
             </span>
           ) : (
             <span className="text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-bold flex items-center gap-1.5">
