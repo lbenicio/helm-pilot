@@ -1,7 +1,7 @@
 import { jwtVerify, SignJWT } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
 
-const SESSION_SECRET = new TextEncoder().encode(process.env.SESSION_SECRET || 'helm-manager-session-secret-key-2024');
+const SESSION_SECRET = new TextEncoder().encode(process.env.SESSION_SECRET || 'helm-pilot-session-secret-key-2024');
 
 export interface SessionUser {
   email: string;

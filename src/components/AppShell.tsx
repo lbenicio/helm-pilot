@@ -6,6 +6,7 @@ import { useApp } from '@/contexts/AppContext';
 
 import Header from './Header';
 import LoginScreen from './LoginScreen';
+import MobileNav from './MobileNav';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { session, loadingSession, checkSession } = useApp();
@@ -28,9 +29,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F5F7] dark:bg-slate-900 text-[#1A1A1A] dark:text-slate-200 flex flex-col font-sans select-none pb-12 transition-colors duration-200">
+    <div className="min-h-screen bg-[#F4F5F7] dark:bg-slate-900 text-[#1A1A1A] dark:text-slate-200 flex flex-col font-sans select-none pb-20 md:pb-12 transition-colors duration-200">
       <Header />
-      <main className="px-6 md:px-8 mt-8 w-full flex-1">{children}</main>
+      <main className="px-4 md:px-8 mt-6 md:mt-8 w-full flex-1">{children}</main>
+      <MobileNav />
     </div>
   );
 }

@@ -99,7 +99,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             transition={{ delay: 0.15 }}
             className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 font-sans"
           >
-            Helm Manager Portal
+            Helm Pilot Portal
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}

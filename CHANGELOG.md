@@ -4,6 +4,36 @@ All notable changes to this repository will be documented in this file.
 
 The format is based on "Keep a Changelog" and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.4] - 2026-06-26
+
+### Added
+- **Mobile bottom navigation** — fixed 4-tab bar (Home/Charts/Events/Health) with 48px touch targets, visible on `md:hidden`
+- `theme-color` meta tags for mobile browser chrome (light/dark mode)
+- Apple PWA meta tags (`apple-mobile-web-app-capable`, `status-bar-style`)
+- Safe area padding for notched devices (`safe-area-bottom`)
+- **ESLint** flat config with TypeScript rules (`eslint.config.mjs`)
+- **Prettier** config (`.prettierrc`) — single quotes, trailing commas, 140 char width
+- **eslint-plugin-perfectionist** — automatic import/export/named-import sorting
+- `lint:check`, `lint:fix`, `format:check`, `format:fix` npm scripts
+
+### Changed
+- Mobile content padding reduced to `px-4`, bottom padding increased to `pb-20` to clear nav bar
+- Desktop nav hidden on mobile; mobile bottom nav hidden on desktop (`md:` breakpoint)
+- All source files formatted with Prettier and ESLint-fixed
+
+## [0.2.3] - 2026-06-26
+
+### Changed
+- **openid-client v5 → v6 migration** — rewritten OIDC module for v6 API (`discovery`, `buildAuthorizationUrl`, `authorizationCodeGrant`, `fetchUserInfo`, `randomState`)
+- OIDC callback path moved to `/api/auth/callback` (Next.js convention)
+- Remainder of Express endpoints migrated to Next.js API routes (quota, usage, test, release CRUD)
+
+### Fixed
+- Repos `DELETE /api/repos/:name` route properly handles dynamic params
+- Repos search and auto-detect endpoints restored with caching
+- `redirect_uri` mismatch error resolved — OIDC callback now at `/api/auth/callback`
+- Unused Vite/Express dependencies cleaned from `package.json`
+
 ## [0.2.2] - 2026-06-26
 
 ### Added
@@ -91,7 +121,7 @@ The format is based on "Keep a Changelog" and this project adheres to [Semantic 
 ## [0.1.0] - 2026-06-25
 
 ### Added
-- Initial release — Helm Manager web application
+- Initial release — Helm Pilot web application
 - OIDC/OAuth2 authentication via Pocket ID
 - Kubernetes cluster health monitoring (nodes, components, latency)
 - Helm release listing, detail view, history

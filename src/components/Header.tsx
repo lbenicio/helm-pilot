@@ -50,7 +50,7 @@ export default function Header() {
               <Ship className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">Helm Manager</h1>
+              <h1 className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">Helm Pilot</h1>
               <span className="text-[10px] text-slate-400 font-mono block">v{pkg.version}</span>
             </div>
           </button>
