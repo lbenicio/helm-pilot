@@ -1,179 +1,157 @@
 # Helm Pilot
 
-[![Dependabot Updates](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/lbenicio/helm-pilot/actions/workflows/dependabot/dependabot-updates)
+A web-based Helm Chart and Kubernetes Release Manager with OIDC authentication. Built with Next.js 16 App Router.
 
-A high-performance, enterprise-grade Kubernetes release dashboard and Helm chart management system. Helm Pilot provides a centralized web-based interface for engineering and platform teams to monitor, deploy, upgrade, and audit Helm releases across multiple clusters with robust security and real-time operational visibility.
+## Features
 
----
+- **Multi-Cluster Support** — Switch between configured clusters with latency and health indicators
+- **Release Dashboard** — View, search, filter, and bulk-manage Helm releases across namespaces
+- **Chart Store Catalog** — Browse and deploy from multiple Helm repos with auto-detection
+- **Release Lifecycle** — Install, upgrade, rollback, restart, and uninstall with a two-step deploy wizard
+- **Cluster Health** — Node inventory, control plane status, API latency, CPU/memory utilization
+- **Live Event Stream** — Real-time feed of Kubernetes events and Helm operations with auto-refresh
+- **Namespace Quotas** — Resource quota tracking and utilization per namespace
+- **OIDC Authentication** — Secure login via any OIDC provider with group-based access control
+- **K8s Impersonation** — Authenticate as a service account and impersonate OIDC users with group headers
+- **Dark Mode** — Full light/dark theme with system preference detection
+- **Mobile Responsive** — Bottom navigation bar, touch-optimized controls, PWA meta tags
 
-## Key Features
+## Architecture
 
-- **Multi-Cluster Orchestration**: Switch contexts seamlessly between configured Kubernetes clusters with instant API latency, context health status, and server readiness tracking.
-- **Unified Chart Registry Catalog**: Seamless browsing of public and private Helm repositories (including pre-configured standard repositories like Bitnami, Prometheus Community, Grafana, and HashiCorp) backed by a high-speed in-memory indexing cache.
-- **Dynamic Release Management**: Install, upgrade, rollback, and uninstall Helm charts through an intuitive UI that translates complex chart values and structures into visual, user-friendly options.
-- **Detailed Lifecycle Inspection**: Deep-dive into active release payloads, custom YAML configurations, revision history tracking, and low-level resource manifests directly from the web panel.
-- **Cluster & Resource Analytics**: Interactive visualizations showing CPU, Memory, and storage utilization over time, combined with namespace quota limits and resource pressure indicators.
-- **Proactive Security Scanning**: Integrated chart package structure verification and built-in release scanner to enforce security, check for common structural anomalies, and analyze vulnerabilities prior to live cluster installation.
-- **Centralized Operational Auditing**: Comprehensive logging engine tracking cluster configurations, repository synchronization, release status updates, and administrative actions with detailed event categorization.
-- **Production-Ready Identity & Access Control**: Enterprise OpenID Connect (OIDC) and OAuth2 authentication flow with secure session serialization, state parameter validation, cookie-based session state protection, and a local credential override.
-
----
-
-## System Architecture
-
-Helm Pilot is designed as a modern, high-performance, full-stack application:
-
-- **Frontend**: A highly responsive Single Page Application (SPA) built using **React 19**, **Vite**, **Tailwind CSS 4** for styling, **Recharts** for performance metrics, and **Motion** for smooth state transitions.
-- **Backend**: A robust **Express** Node.js server that handles API proxy routing, manages repository cache indexing, performs Helm release decoding (processing standard gzip-compressed base64 payloads), audits system actions, and handles secure OIDC authentication exchanges.
-- **Build Pipeline**: Combines frontend static optimization with an optimized backend build where server-side files are compiled using `esbuild` into a single, highly efficient bundled format to bypass Node.js relative module runtime overhead.
-
----
+- **Frontend**: Next.js 16 App Router, React 19, Tailwind CSS 4, Recharts, Motion
+- **Backend**: Next.js API routes, `openid-client` v6 for OIDC, `jose` for JWT sessions
+- **Routing**: File-based under `src/app/` — pages, layouts, API routes, dynamic params
+- **State**: React Context (`AppContext`) for session, clusters, theme, search, namespace
 
 ## Directory Structure
 
 ```
-├── .env.example          # Sample environment configurations
-├── Dockerfile            # Multi-stage production container build specification
-├── package.json          # Node dependency manifest and automated task runner
-├── vite.config.ts        # Client asset-bundling and development proxy settings
-├── tsconfig.json         # Strict TypeScript compiler definitions
-├── public/               # Static graphics, logos, and UI asset elements
 ├── src/
-│   ├── main.tsx          # Client-side SPA mounting entrypoint
-│   ├── App.tsx           # Global routing, core layout, and state provider
-│   ├── server.ts         # Full-stack backend web server and API controllers
-│   ├── types/            # Application-wide TypeScript type and interface declarations
-│   ├── styles/           # Main global styles and Tailwind imports
-│   └── components/       # Reusable user interface components
-│       ├── Dashboard.tsx            # Release index, filtering, and main table controls
-│       ├── RepoCatalog.tsx          # Helm repository browser, search, and additions
-│       ├── ReleaseDetails.tsx       # Live status, revision tracking, rollbacks, and manifests
-│       ├── ClusterSelector.tsx      # Multi-cluster connectivity and selector interface
-│       ├── ClusterHealthWidget.tsx  # Dynamic performance graphs and network latency gauges
-│       ├── NamespaceQuotaWidget.tsx # Live limits visualizer and storage status widgets
-│       ├── ResourceUsageChart.tsx   # Real-time resource usage analytics
-│       ├── InstallChartModal.tsx    # Modal for release deployment and custom value injection
-│       ├── AntivirusScanner.tsx     # Chart package and release security verification module
-│       ├── ActivityLog.tsx          # Unified operations and audit trail logging UI
-│       └── LoginScreen.tsx          # OIDC / credential authentication portal
+│   ├── app/                          # Next.js App Router
+│   │   ├── layout.tsx                # Root layout + metadata
+│   │   ├── page.tsx                  # / (Dashboard)
+│   │   ├── not-found.tsx             # Custom 404
+│   │   ├── global-error.tsx          # Custom 500
+│   │   ├── robots.ts                 # /robots.txt
+│   │   ├── sitemap.ts                # /sitemap.xml
+│   │   ├── charts/page.tsx           # /charts
+│   │   ├── events/page.tsx           # /events
+│   │   ├── health/page.tsx           # /health
+│   │   ├── search/page.tsx           # /search?q=
+│   │   ├── release/[namespace]/[name]/page.tsx
+│   │   └── api/                      # API routes
+│   │       ├── auth/url,callback,session,logout/
+│   │       ├── k8s/[...path]/        # Catch-all K8s proxy
+│   │       ├── repos/                # Repo CRUD + search + auto-detect
+│   │       └── health,live,ready/
+│   ├── components/                   # Shared React components
+│   │   ├── AppShell.tsx              # Auth gate + layout wrapper
+│   │   ├── Header.tsx                # Navbar + breadcrumbs
+│   │   ├── MobileNav.tsx             # Mobile bottom navigation
+│   │   ├── Providers.tsx             # AppProvider wrapper
+│   │   ├── Dashboard.tsx             # Release management
+│   │   ├── ReleaseDetails.tsx        # Release detail + actions
+│   │   ├── RepoCatalog.tsx           # Chart browser + search
+│   │   ├── InstallChartModal.tsx     # Two-step deploy wizard
+│   │   ├── ClusterSelector.tsx       # Multi-cluster management
+│   │   ├── ClusterHealthWidget.tsx   # Node/component health
+│   │   ├── NamespaceQuotaWidget.tsx  # Resource quotas
+│   │   ├── ResourceUsageChart.tsx    # CPU/memory metrics
+│   │   ├── ActivityLog.tsx           # Event stream
+│   │   ├── AntivirusScanner.tsx      # Manifest security scanner
+│   │   ├── LoginScreen.tsx           # OIDC login
+│   │   ├── ContextMenu.tsx           # Right-click menu
+│   │   ├── TruncatedSegment.tsx      # Text truncation
+│   │   └── Header.tsx                # Navigation + breadcrumbs
+│   ├── contexts/
+│   │   └── AppContext.tsx            # Shared state provider
+│   ├── lib/
+│   │   ├── session.ts                # JWT cookie sessions (jose)
+│   │   ├── k8s.ts                    # K8s config + API caller
+│   │   ├── helm.ts                   # Release parse/encode
+│   │   ├── oidc.ts                   # openid-client v6
+│   │   ├── logger.ts                 # ANSI color logger
+│   │   └── repos.ts                  # In-memory repo store
+│   ├── types/                        # TypeScript interfaces
+│   └── styles/
+│       └── index.css                 # Tailwind + fonts + scrollbars
+├── public/
+│   └── static/favicon/               # Multi-variant favicons
+├── docs/                             # Full documentation
+├── scripts/
+│   └── docker-release.sh             # Multi-registry build + push
+├── Dockerfile                        # Production build (standalone)
+├── Dockerfile.dev                    # Development with hot-reload
+├── docker-compose.yml                # Dev compose with volume mounts
+├── next.config.ts                    # Next.js config + health rewrites
+├── eslint.config.mjs                 # ESLint flat config + perfectionist
+├── .prettierrc                       # Prettier config
+├── postcss.config.mjs                # Tailwind CSS PostCSS plugin
+├── tsconfig.json                     # TypeScript config
+└── package.json
 ```
 
----
-
-## Configuration & Environment Setup
-
-Configure the application by creating a `.env` file at the root of the project using the structure provided below:
-
-```bash
-# APP_URL: The URL where this applet is hosted.
-# Used for self-referential links, OAuth callbacks, and API endpoints.
-APP_URL="http://localhost:3000"
-# Log level: error | warn | info | debug (default: info)
-# Set to "debug" during development to see verbose request logs.
-LOG_LEVEL="info"
-
-# OIDC OAuth2 Authentication Configuration
-OIDC_CLIENT_ID="your_client_id_here"
-OIDC_CLIENT_SECRET="your_client_secret_here"
-OIDC_ISSUER_URL="https://your-oidc-provider.com"
-OIDC_SCOPES="openid profile email"
-# Set to "true" to skip TLS validation of OIDC provider certificates in dev/sandbox environments
-OIDC_SKIP_TLS_VERIFY="true"
-# Comma-separated list of OIDC groups allowed to access the app.
-# If set, only users belonging to at least one of these groups can log in.
-# Leave empty to allow all authenticated users.
-# OIDC_ALLOWED_GROUPS="admin, developers"
-
-# Default Kubernetes cluster (optional — used when no cluster is configured in the UI)
-K8S_API_URL="https://your-k8s-api.example.com"
-K8S_CLUSTER_NAME="Production"
-# K8s service account token for impersonation (optional).
-# When set, the server authenticates as this SA and impersonates the OIDC user.
-# The SA needs "impersonate" verb on "users" resource.
-# K8S_TOKEN="your-sa-token-here"
-```
-
----
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- **Node.js** v24.x or later
-- **npm** v11.x or later
+- Node.js 22+
+- npm 10+
 
-### Installation
-
-Clone the repository and install the project dependencies:
+### Setup
 
 ```bash
-npm run deps:install
-```
-
-### Local Development
-
-Start the development server with real-time asset compilation and hot reloading:
-
-```bash
+git clone https://github.com/lbenicio/helm-pilot.git
+cd helm-pilot
+npm ci
+cp .env.example .env
+# Edit .env with your OIDC and K8s credentials
 npm run start:dev
 ```
 
-The application will be accessible locally at `http://localhost:3000`.
+Open `http://localhost:3000`.
 
----
-
-## Production Deployment
-
-### Build Pipeline
-
-To compile the application for production use:
+### Docker Compose
 
 ```bash
-npm run build:prod
+docker compose up --build -d
 ```
 
-The build process executes two steps:
-1. Bundles and minifies client-side assets to `dist/` utilizing **Vite**.
-2. Compiles and packages the Express backend TypeScript codebase with **esbuild** into a single, standalone CommonJS file at `dist/server.cjs` for streamlined runtime execution.
+## Configuration
 
-### Start the Application
+See [docs/getting-started/configuration.md](docs/getting-started/configuration.md) for the complete environment variables reference.
 
-Run the compiled full-stack server:
+| Variable | Required | Description |
+|---|---|---|
+| `OIDC_CLIENT_ID` | Yes | OIDC client ID |
+| `OIDC_CLIENT_SECRET` | Yes | OIDC client secret |
+| `OIDC_ISSUER_URL` | Yes | OIDC issuer discovery URL |
+| `K8S_API_URL` | No | Default cluster API URL |
+| `K8S_TOKEN` | No | SA token for impersonation |
+| `K8S_CLUSTER_NAME` | No | Default cluster display name |
+| `LOG_LEVEL` | No | `error` / `warn` / `info` / `debug` |
+| `OIDC_ALLOWED_GROUPS` | No | Comma-separated allowed groups |
 
-```bash
-npm run start:prod
-```
+## Scripts
 
----
+| Script | Description |
+|---|---|
+| `npm run start:dev` | Start Next.js dev server |
+| `npm run start:prod` | Start production server |
+| `npm run build:prod` | Production build |
+| `npm run type:check` | TypeScript type checking |
+| `npm run lint:check` | ESLint check |
+| `npm run lint:fix` | ESLint auto-fix |
+| `npm run format:check` | Prettier check |
+| `npm run format:fix` | Prettier format |
+| `npm run docker:build` | Build production image |
+| `npm run docker:up` | Start dev containers |
+| `npm run docker:release` | Build + push multi-registry |
 
-## Container Deployment
+## Documentation
 
-This repository includes a multi-stage `Dockerfile` optimized for minimal footprint and maximum security.
+Full documentation in [`docs/`](docs/README.md) covering getting started, architecture, authentication, Kubernetes, deployment, and development.
 
-### Build the Image
+## License
 
-```bash
-docker build --tag helm-pilot:latest .
-```
-
-### Run the Container
-
-```bash
-docker run -d \
-  --port 3000:3000 \
-  --env-file .env \
-  --name helm-pilot \
-  helm-pilot:latest
-```
-
-The system will start listening on port `3000`.
-
----
-
-## Quality & Code Guidelines
-
-- **Strict Type Checking**: Every file must pass the TypeScript compilation rules without exceptions. Verify type safety via:
-  ```bash
-  npm run fmt:lint
-  ```
-- **Pruned Production Images**: The container build uses `node-prune` to eliminate unnecessary documentation, markdown files, and TypeScript definitions from production `node_modules` for high-performance container spin-ups.
+GPL-3.0-only — see [LICENSE.txt](LICENSE.txt).
