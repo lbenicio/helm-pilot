@@ -28,7 +28,7 @@
     "jose": "^6.2.3",
     "js-yaml": "^5.1.0",
     "lucide-react": "^1.23.0",
-    "motion": "^12.42.0",
+    "motion": "^12.42.2",
     "next": "^16.2.10",
     "openid-client": "^6.8.4",
     "react": "^19.2.7",
