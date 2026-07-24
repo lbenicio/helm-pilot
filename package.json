@@ -31,7 +31,7 @@
     "motion": "^12.42.2",
     "next": "^16.2.10",
     "openid-client": "^6.8.4",
-    "react": "^19.2.7",
+    "react": "^19.2.8",
     "react-dom": "^19.2.7",
     "recharts": "^3.9.2"
   },
