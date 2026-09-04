@@ -44,7 +44,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.4.0",
     "@types/react": "19.2.18",
-    "@vitejs/plugin-react": "^6.1.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^4.1.11",
     "concurrently": "^10.0.5",
     "esbuild": "^0.28.2",
