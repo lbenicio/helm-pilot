@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "dotenv": "^18.0.8",
-    "jose": "^6.2.12",
+    "jose": "^6.2.13",
     "js-yaml": "^5.5.0",
     "lucide-react": "^1.59.0",
     "motion": "^14.4.0",
